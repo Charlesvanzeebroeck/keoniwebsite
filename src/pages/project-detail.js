@@ -1,6 +1,6 @@
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
-import { buildProjectDetailIntroTimeline, animateVideoChange } from './project-detail.gsap.js';
+import { buildProjectDetailIntroTimeline } from './project-detail.gsap.js';
 
 // Get project ID from URL parameters
 function getProjectIdFromSearch(search) {
@@ -19,8 +19,6 @@ let currentVideoIndex = 0;
 let currentPlayer = null;
 
 // Store event listener references for proper cleanup
-let prevVideoHandler = null;
-let nextVideoHandler = null;
 let userInteractionHandlers = {
     click: null,
     touchstart: null,
@@ -125,70 +123,6 @@ function updateProjectDetail(project, videoIndex = 0) {
         collaboratorsContainer.innerHTML = '<p class="no-collaborators">No collaborators</p>';
     }
 
-    // Update video navigation
-    updateVideoNavigation(project, videoIndex);
-}
-
-// Update video navigation controls
-function updateVideoNavigation(project, videoIndex) {
-    const prevBtn = document.getElementById('prevVideo');
-    const nextBtn = document.getElementById('nextVideo');
-    const currentIndexSpan = document.getElementById('currentVideoIndex');
-    const totalVideosSpan = document.getElementById('totalVideos');
-
-    const totalVideos = project.videos.length;
-
-    // Update counter
-    currentIndexSpan.textContent = videoIndex + 1;
-    totalVideosSpan.textContent = totalVideos;
-
-    // Update button states
-    prevBtn.disabled = videoIndex === 0;
-    nextBtn.disabled = videoIndex === totalVideos - 1;
-
-    // Show/hide navigation if only one video
-    const navigation = document.querySelector('.video-navigation');
-    if (totalVideos <= 1) {
-        navigation.style.display = 'none';
-    } else {
-        navigation.style.display = 'flex';
-    }
-}
-
-// Navigate to previous video
-function navigateToPreviousVideo() {
-    if (currentProject && currentVideoIndex > 0) {
-        currentVideoIndex--;
-        console.log('Navigating to previous video, new index:', currentVideoIndex);
-
-        // Trigger video change animation
-        animateVideoChange();
-
-        updateProjectDetail(currentProject, currentVideoIndex);
-
-        // Wait for video element to update before initializing player
-        setTimeout(() => {
-            initializeVideoPlayer();
-        }, 50);
-    }
-}
-
-// Navigate to next video
-function navigateToNextVideo() {
-    if (currentProject && currentVideoIndex < currentProject.videos.length - 1) {
-        currentVideoIndex++;
-        console.log('Navigating to next video, new index:', currentVideoIndex);
-
-        // Trigger video change animation
-        animateVideoChange();
-
-        updateProjectDetail(currentProject, currentVideoIndex);
-
-        // Wait for video element to update before initializing player
-        setTimeout(() => {
-            initializeVideoPlayer();
-        }, 50);
-    }
 }
 
 // Initialize Plyr video player
@@ -283,12 +217,6 @@ export async function init(_rootEl, { search } = {}) {
     currentVideoIndex = 0;
     updateProjectDetail(currentProject, currentVideoIndex);
 
-    // Store and add navigation event listeners
-    prevVideoHandler = navigateToPreviousVideo;
-    nextVideoHandler = navigateToNextVideo;
-    document.getElementById('prevVideo').addEventListener('click', prevVideoHandler);
-    document.getElementById('nextVideo').addEventListener('click', nextVideoHandler);
-
     // Initialize video player
     initializeVideoPlayer();
 
@@ -328,23 +256,6 @@ export async function init(_rootEl, { search } = {}) {
 export async function destroy() {
     // Teardown video player
     try { teardownCurrentVideo(); } catch (_) { }
-
-    // Remove navigation event listeners
-    if (prevVideoHandler) {
-        const prevBtn = document.getElementById('prevVideo');
-        if (prevBtn) {
-            prevBtn.removeEventListener('click', prevVideoHandler);
-        }
-        prevVideoHandler = null;
-    }
-
-    if (nextVideoHandler) {
-        const nextBtn = document.getElementById('nextVideo');
-        if (nextBtn) {
-            nextBtn.removeEventListener('click', nextVideoHandler);
-        }
-        nextVideoHandler = null;
-    }
 
     // Remove user interaction listeners
     if (userInteractionHandlers.click) {

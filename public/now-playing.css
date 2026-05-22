@@ -1,0 +1,213 @@
+#nowPlaying {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 2rem));
+  height: 64px;
+  border-radius: 0;
+  background: rgba(20, 20, 20, 0.75);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  z-index: 200;
+  overflow: hidden;
+  color: #f2f2f2;
+  font-family: "DM Sans", sans-serif;
+}
+
+/* Idle */
+.npb-idle {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 1.75rem;
+  gap: 1rem;
+}
+
+.npb-idle-text {
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex: 1;
+}
+
+.npb-volume-idle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255,255,255,0.4);
+}
+
+.npb-vol-icon { width: 16px; height: 16px; }
+
+/* Playing */
+.npb-playing {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 1.25rem;
+  gap: 0.75rem;
+}
+
+/* Left: track info */
+.npb-track-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.npb-artwork {
+  width: 36px;
+  height: 36px;
+  border-radius: 0;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.npb-titles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.npb-track-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.npb-project-title {
+  font-size: 0.68rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  text-align: left;
+}
+.npb-project-title:hover { color: #f2f2f2; }
+
+/* Center: controls */
+.npb-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.npb-prev, .npb-next, .npb-playpause {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+}
+.npb-prev:hover, .npb-next:hover, .npb-playpause:hover { color: #f2f2f2; }
+.npb-prev svg, .npb-next svg { width: 18px; height: 18px; }
+.npb-playpause svg { width: 24px; height: 24px; }
+
+.npb-scrubber {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.npb-time {
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.4);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Right */
+.npb-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.npb-shuffle-btn, .npb-mute-btn, .npb-playpause-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+}
+.npb-shuffle-btn svg, .npb-mute-btn svg, .npb-playpause-side svg { width: 16px; height: 16px; }
+.npb-shuffle-btn:hover, .npb-mute-btn:hover, .npb-playpause-side:hover { color: #f2f2f2; }
+.npb-shuffle-btn.active { color: #e65b39; }
+.npb-playpause-side { color: rgba(255,255,255,0.85); }
+.npb-playpause-side svg { width: 18px; height: 18px; }
+
+/* Range inputs */
+.npb-progress,
+.npb-volume-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.npb-progress { width: 120px; }
+.npb-volume-range { width: 70px; }
+
+.npb-progress::-webkit-slider-runnable-track,
+.npb-volume-range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 0;
+}
+.npb-progress::-webkit-slider-thumb,
+.npb-volume-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  background: #f2f2f2;
+  margin-top: -3px;
+  cursor: pointer;
+}
+.npb-progress::-moz-range-track,
+.npb-volume-range::-moz-range-track {
+  height: 2px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 0;
+}
+.npb-progress::-moz-range-thumb,
+.npb-volume-range::-moz-range-thumb {
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  background: #f2f2f2;
+  border: none;
+  cursor: pointer;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  #nowPlaying {
+    height: 56px;
+    bottom: 0.75rem;
+  }
+
+  .npb-playing {
+    grid-template-columns: 1fr auto;
+    padding: 0 1rem;
+  }
+
+  .npb-right { display: none; }
+  .npb-scrubber { display: none; }
+  .npb-idle { padding: 0 1.25rem; }
+}

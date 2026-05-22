@@ -1,107 +1,97 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { buildIntroTimeline, createScrollTriggers } from './home.gsap.js';
+import { buildIntroTimeline } from './home.gsap.js';
+import { mount as mountGallery } from '../components/gallery.js';
+import { mount as mountPanel, select as selectProject, destroy as destroyPanel } from '../components/projectPanel.js';
+import * as player from '../audioPlayer.js';
+
+const HERO_TRACK = {
+    id: '__hero',
+    title: 'Hero Theme',
+    src: '/Portofolio/landingong.mp3',
+    _project: { id: '__hero', title: 'Keoni', artwork: '/Portofolio/Musics/placeholder.png' },
+};
 
 let videoRef = null;
 let introTl = null;
-let scrollTriggers = [];
-let isFirstLoad = true;
-let previousPath = null;
 
 export async function init(rootEl, ctx) {
     const video = rootEl.querySelector('#player');
     if (!video) return;
-
     videoRef = video;
-    // Ensure autoplay-friendly state
-    try {
-        video.muted = true;
-        video.playsInline = true;
-        video.autoplay = true;
-        // Reload to apply attributes reliably after dynamic insertion
-        video.load();
-    } catch (_) { }
 
-    // Try to start playback with a couple of schedules
+    // Hero video autoplay
     const tryPlay = () => {
         try {
             const p = video.play();
-            if (p && typeof p.catch === 'function') p.catch(() => { });
-        } catch (_) { }
+            if (p?.catch) p.catch(() => {});
+        } catch (_) {}
     };
-
-    // Immediate and delayed attempts + on canplay
+    video.muted = true;
+    video.playsInline = true;
+    video.load();
     tryPlay();
     setTimeout(tryPlay, 60);
     video.addEventListener('canplay', tryPlay, { once: true });
     if (document.visibilityState === 'visible') setTimeout(tryPlay, 150);
+    document.addEventListener('click', tryPlay, { once: true });
+    document.addEventListener('touchstart', tryPlay, { once: true });
+    video.addEventListener('pause', () => video.play());
 
-    // User interaction fallback (Safari/iOS edge cases)
-    const resumeOnUser = () => tryPlay();
-    document.addEventListener('click', resumeOnUser, { once: true });
-    document.addEventListener('touchstart', resumeOnUser, { once: true });
-    document.addEventListener('keydown', resumeOnUser, { once: true });
-
-    // Cursor behavior
-    if (window.cursor) {
-        window.cursor.initShowreel(video);
+    // Hero play/pause overlay — drives the audio player with the hero song
+    const heroEl = video.parentElement;
+    let unsubHero = null;
+    if (heroEl) {
+        const overlay = document.createElement('button');
+        overlay.className = 'sound-overlay';
+        overlay.setAttribute('aria-label', 'Play/pause hero theme');
+        const updateIcon = () => {
+            const s = player.getState();
+            const isHeroPlaying = s.track?.id === HERO_TRACK.id && s.playing;
+            overlay.innerHTML = isHeroPlaying
+                ? `<svg viewBox="0 0 24 24" fill="none"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>`
+                : `<svg viewBox="0 0 24 24" fill="none"><path d="M5 3L19 12L5 21V3Z" fill="#fff"/></svg>`;
+        };
+        updateIcon();
+        heroEl.appendChild(overlay);
+        heroEl.addEventListener('mouseenter', () => overlay.classList.add('visible'));
+        heroEl.addEventListener('mouseleave', () => overlay.classList.remove('visible'));
+        overlay.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const s = player.getState();
+            if (s.track?.id === HERO_TRACK.id) {
+                player.toggle();
+            } else {
+                player.playTrack(HERO_TRACK, [HERO_TRACK]);
+            }
+        });
+        unsubHero = player.on('statechange', updateIcon);
+        videoRef._unsubHero = unsubHero;
     }
 
-    // Check if mask is visible (means we came from a page with transition)
-    const mask = document.querySelector('.mask');
-    const maskIsVisible = mask && window.getComputedStyle(mask).display !== 'none';
+    // Panel + gallery
+    const frameMediaEl = rootEl.querySelector('#projectFrameMedia');
+    const infoEl = rootEl.querySelector('#projectInfo');
+    const rowEl = rootEl.querySelector('#projectRow');
 
-    // Force mask animation if coming from a transition or first load
-    const shouldPlayMaskAnimation = isFirstLoad || maskIsVisible;
+    if (frameMediaEl && infoEl) mountPanel(frameMediaEl, infoEl);
+    if (rowEl) mountGallery(rowEl, (project) => selectProject(project));
 
-    // Prepare GSAP intro and scroll triggers (do not play yet)
-    introTl = buildIntroTimeline(shouldPlayMaskAnimation);
-    scrollTriggers = createScrollTriggers(rootEl);
-
-    // Mark as no longer first load
-    if (isFirstLoad) {
-        isFirstLoad = false;
-    }
-
-    // Store current path for next navigation
-    previousPath = ctx?.path || window.location.pathname;
+    // GSAP intro
+    introTl = buildIntroTimeline();
 }
 
 export async function destroy() {
-    // Clean up GSAP animations and reset header elements
-    if (introTl) {
-        introTl.kill();
-        introTl = null;
-    }
-
-    // Kill all ScrollTriggers
-    ScrollTrigger.getAll().forEach(trigger => {
-        trigger.kill();
-    });
-    scrollTriggers = [];
-
-    // Clear any GSAP inline styles from header elements AFTER animations are killed
-    // Note: We don't clear mask/showreel because they persist across pages
-    try {
-        const logo = document.querySelector('.logo');
-        const navItems = document.querySelectorAll('.nav_item');
-
-        // Set logo to black after clearing to maintain correct color on other pages
-        if (logo) {
-            gsap.set(logo, { clearProps: "all" });
-            gsap.set(logo, { color: "#1B1D1D" });
-        }
-        if (navItems.length) navItems.forEach(item => gsap.set(item, { clearProps: "all" }));
-    } catch (_) { }
-
+    if (introTl) { introTl.kill(); introTl = null; }
+    ScrollTrigger.getAll().forEach(t => t.kill());
+    destroyPanel();
+    if (videoRef?._unsubHero) { videoRef._unsubHero(); }
     if (!videoRef) return;
-    try { videoRef.pause(); } catch (_) { }
+    try { videoRef.pause(); } catch (_) {}
     try {
-        // Abort any network activity to avoid background downloads
         videoRef.removeAttribute('src');
-        const sources = videoRef.querySelectorAll('source');
-        sources.forEach(s => s.remove());
+        videoRef.querySelectorAll('source').forEach(s => s.remove());
         videoRef.load();
-    } catch (_) { }
+    } catch (_) {}
     videoRef = null;
 }

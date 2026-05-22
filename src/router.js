@@ -12,18 +12,6 @@ const routes = [
         viewUrl: '/views/home.html',
         moduleLoader: () => import('./pages/home.js'),
     },
-    {
-        name: 'projects',
-        match: (path) => path === '/projects' || path === '/projects.html',
-        viewUrl: '/views/projects.html',
-        moduleLoader: () => import('./pages/projects.js'),
-    },
-    {
-        name: 'project-detail',
-        match: (path) => path === '/project-detail' || path === '/project-detail.html',
-        viewUrl: '/views/project-detail.html',
-        moduleLoader: () => import('./pages/project-detail.js'),
-    },
 ];
 
 function sameOrigin(href) {
@@ -36,7 +24,7 @@ function sameOrigin(href) {
 }
 
 function isAssetPath(pathname) {
-    return /\.(png|jpe?g|gif|svg|webp|mp4|webm|mp3|wav|css|js|json|txt)$/i.test(pathname);
+    return /\.(png|jpe?g|gif|svg|webp|mp4|mov|webm|mp3|wav|css|js|json|txt)$/i.test(pathname);
 }
 
 const viewCache = new Map();
@@ -83,55 +71,28 @@ async function mount(route, ctx, replace = false) {
     const container = document.getElementById(viewContainerId);
     if (!container) return;
 
-    // Check if we're transitioning to home from projects or project-detail
-    const isFromProjectsOrDetail = current.path && (
-        current.path === '/projects' ||
-        current.path === '/projects.html' ||
-        current.path === '/project-detail' ||
-        current.path === '/project-detail.html'
-    );
-    const isToHome = route.name === 'home';
-    const shouldTransition = isFromProjectsOrDetail && isToHome;
-
-    // If transitioning to home, animate mask down first
-    if (shouldTransition && current.module && typeof current.module.prepareHomeTransition === 'function') {
-        try {
-            await current.module.prepareHomeTransition();
-        } catch (e) {
-            console.log('Transition animation skipped:', e);
-        }
-    }
-
-    // Prepare new view element
     const html = await fetchView(route.viewUrl);
     const wrapper = document.createElement('div');
     wrapper.className = 'view-wrapper';
     wrapper.innerHTML = html;
 
-
-    // Unmount existing module
     if (current.module && typeof current.module.destroy === 'function') {
         try { await current.module.destroy(); } catch { /* no-op */ }
     }
 
-    // Swap content
     container.innerHTML = '';
     container.appendChild(wrapper);
 
-    // Ensure we start at the top on every navigation
     try { window.scrollTo(0, 0); } catch (_) { }
 
-    // Load module and init
     const pageModule = await route.moduleLoader();
     const ctxObj = { path: window.location.pathname, search: window.location.search, params: new URLSearchParams(window.location.search) };
     if (pageModule && typeof pageModule.init === 'function') {
         await pageModule.init(wrapper, ctxObj);
     }
 
-    // Save current
     current = { module: pageModule, rootEl: wrapper, path: window.location.pathname };
 
-    // If there is a hash in the current URL, ensure we scroll to it after mount
     if (window.location.hash) scrollToHash(window.location.hash);
 }
 
@@ -152,7 +113,7 @@ export async function navigate(href, { replace = false } = {}) {
 
 function onLinkClick(e) {
     if (e.defaultPrevented) return;
-    if (e.button !== 0) return; // only left clicks
+    if (e.button !== 0) return;
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
     const anchor = e.composedPath ? e.composedPath().find(el => el && el.tagName === 'A') : e.target.closest('a');
@@ -160,7 +121,6 @@ function onLinkClick(e) {
     if (anchor.target && anchor.target.toLowerCase() === '_blank') return;
     const href = anchor.getAttribute('href');
     if (!href) return;
-    // Handle same-page hash links with smooth scroll and without SPA navigation
     if (href.startsWith('#')) {
         e.preventDefault();
         navigateSamePageHash(href);
@@ -189,18 +149,12 @@ function onPopState() {
 }
 
 export async function start() {
-    // Global link interception
     document.addEventListener('click', onLinkClick);
     window.addEventListener('popstate', onPopState);
     window.addEventListener('hashchange', () => scrollToHash(window.location.hash));
 
-    // Always manage scroll position manually across navigations
     try { if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'; } catch (_) { }
-    // Expose navigate helper so page modules can navigate programmatically
     window.__spaNavigate = (href) => navigate(href);
 
-    // Initial navigation
     await navigate(window.location.pathname + window.location.search + window.location.hash, { replace: true });
 }
-
-

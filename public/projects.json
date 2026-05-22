@@ -1,479 +1,348 @@
 {
-    "projects": [
+  "projects": [
+    {
+      "id": "secret-7",
+      "title": "Secret 7",
+      "type": "collab",
+      "year": 2024,
+      "skills": [
+        "Sound design",
+        "Music production"
+      ],
+      "description": "Sound design and original composition for the Secret 7 vinyl artwork exhibition. Seven tracks reimagined as seven soundscapes.",
+      "artwork": "/Portofolio/Projects/Secret 7/cover.png",
+      "video": {
+        "src": "/Portofolio/Projects/Secret 7/video.mp4",
+        "preview": "/Portofolio/Projects/Secret 7/video.mp4",
+        "format": "v",
+        "resolution": [
+          810,
+          1080
+        ]
+      },
+      "tracks": [
         {
-            "id": 1,
-            "title": "THE CHOSEN ONE",
-            "year": 2025,
-            "client": "Kcorp",
-            "description": "E-sport content featuring dynamic sound design, motion graphics, and color  grading for Kcorp's competitive gaming brand.",
-            "thumbnail": "./thumbnails/Kcorp.jpg",
-            "skills": [
-                "Sound-Design",
-                "Motion"
-            ],
-            "collaborators": [
-                "Kcorp"
-            ],
-            "category": "E-sport",
-            "format": "h",
-            "resolution": [
-                "1920",
-                "810"
-            ],
-            "videos": [
-                {
-                    "id": "kcorp-1",
-                    "title": "THE CHOSEN ONE",
-                    "videoUrl": "./videos/TheChosenOne.mp4",
-                    "previewUrl": "./videos/previews/TheChosenOne.mp4"
-                }
-            ]
-        },
-        {
-            "id": 2,
-            "title": "Kaaris",
-            "year": 2025,
-            "client": "Kaaris",
-            "description": "Music videos for Kaaris featuring dynamic editing, urban aesthetics, and  cinematic storytelling across multiple tracks.",
-            "thumbnail": "./thumbnails/K2A.jpg",
-            "skills": [
-                "Motion",
-                "Prise de vue",
-                "Sound-Design",
-                "Réalisation"
-            ],
-            "collaborators": [
-                "Kaaris"
-            ],
-            "category": "Music",
-            "format": "v",
-            "resolution": [
-                "607",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "kaaris-1",
-                    "title": "Kaaris - BDX",
-                    "videoUrl": "./videos/KaarisBdx.mp4",
-                    "previewUrl": "./videos/previews/KaarisBdx.mp4"
-                },
-                {
-                    "id": "kaaris-2",
-                    "title": "Kaaris - BDX 2",
-                    "videoUrl": "./videos/KaarisBdx2.mp4"
-                },
-                {
-                    "id": "kaaris-3",
-                    "title": "Kaaris - Montage",
-                    "videoUrl": "./videos/KaarisMontage.mp4"
-                },
-                {
-                    "id": "kaaris-4",
-                    "title": "Kaaris - Defense",
-                    "videoUrl": "./videos/KaarisDefense.mp4"
-                },
-                {
-                    "id": "kaaris-5",
-                    "title": "Kaaris - Defense 2",
-                    "videoUrl": "./videos/KaarisDefensePart2.mp4"
-                },
-                {
-                    "id": "kaaris-6",
-                    "title": "Kaaris - Ardentes",
-                    "videoUrl": "./videos/KaarisArdentes.mp4"
-                }
-            ]
-        },
-        {
-            "id": 3,
-            "title": "Djadja & Dinaz - Foot Korner",
-            "year": 2025,
-            "client": "Foot Korner",
-            "description": "Music video collaboration featuring dynamic editing and urban culture.",
-            "thumbnail": "./thumbnails/Footcorner.jpg",
-            "skills": [
-                "Prise de vue",
-                "Sound-Design",
-                "Réalisation"
-            ],
-            "collaborators": [
-                "Djadja",
-                "Dinaz"
-            ],
-            "category": "Music",
-            "format": "v",
-            "resolution": [
-                "607",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "djadja-1",
-                    "title": "Djadja & Dinaz - Foot Korner",
-                    "videoUrl": "./videos/DjadjaDinaz.mp4",
-                    "previewUrl": "./videos/previews/DjadjaDinaz.mp4"
-                }
-            ]
-        },
-        {
-            "id": 4,
-            "title": "Gin Khao",
-            "year": 2025,
-            "client": "Gin Khao",
-            "description": "Music video for Gin Khao with dynamic editing and visual effects.",
-            "thumbnail": "./thumbnails/GinKhao.jpg",
-            "skills": [
-                "Motion",
-                "Sound-Design"
-            ],
-            "collaborators": [
-                "Gin Khao"
-            ],
-            "category": "Perso",
-            "format": "v",
-            "resolution": [
-                "607",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "gin-kao-1",
-                    "title": "Gin Kao",
-                    "videoUrl": "./videos/GinKao.mp4",
-                    "previewUrl": "./videos/previews/GinKao.mp4"
-                }
-            ]
-        },
-        {
-            "id": 5,
-            "title": "OTP_Lol",
-            "year": 2024,
-            "client": "OTP / ZOXI",
-            "description": "Video for Zoxii featuring dynamic editing and urban aesthetics.",
-            "thumbnail": "./thumbnails/Zoxi.jpg",
-            "skills": [
-                "Motion"
-            ],
-            "collaborators": [
-                "Zoxii"
-            ],
-            "category": "E-sport",
-            "format": "h",
-            "resolution": [
-                "1920",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "zoxii-1",
-                    "title": "Zoxii",
-                    "videoUrl": "./videos/zoxii.mp4",
-                    "previewUrl": "./videos/previews/zoxii.mp4"
-                }
-            ]
-        },
-        {
-            "id": 8,
-            "title": "SteelSeries",
-            "year": 2025,
-            "client": "SteelSeries",
-            "description": "Music video for Steel with dynamic editing and visual effects.",
-            "thumbnail": "./thumbnails/Steel.jpg",
-            "skills": [
-                "Motion",
-                "Réalisation"
-            ],
-            "collaborators": [
-                "Steel"
-            ],
-            "category": "E-sport",
-            "format": "h",
-            "resolution": [
-                "2703",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "steel-1",
-                    "title": "Steel",
-                    "videoUrl": "./videos/Steel.mp4",
-                    "previewUrl": "./videos/previews/Steel.mp4"
-                }
-            ]
-        },
-        {
-            "id": 9,
-            "title": "Rain GG",
-            "year": 2025,
-            "client": "Rain GG",
-            "description": "Gaming content for Rain GG with dynamic editing and visual effects.",
-            "thumbnail": "./thumbnails/Raingg.jpg",
-            "skills": [
-                "Motion",
-                "Sound-Design"
-            ],
-            "collaborators": [
-                "Rain GG"
-            ],
-            "category": "E-sport",
-            "format": "h",
-            "resolution": [
-                "1920",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "rain-gg-1",
-                    "title": "Rain GG",
-                    "videoUrl": "./videos/RainGG.mp4",
-                    "previewUrl": "./videos/previews/RainGG.mp4"
-                }
-            ]
-        },
-        {
-            "id": 10,
-            "title": "Galions",
-            "year": 2025,
-            "client": "Galions",
-            "description": "videos for Galions featuring dynamic editing and urban aesthetics.",
-            "thumbnail": "./thumbnails/Gallions.jpg",
-            "skills": [
-                "Motion",
-                "Sound-Design"
-            ],
-            "collaborators": [
-                "Galions"
-            ],
-            "category": "E-sport",
-            "format": "v",
-            "resolution": [
-                "607",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "galions-1",
-                    "title": "Galions",
-                    "videoUrl": "./videos/GalionsTiktok.mp4",
-                    "previewUrl": "./videos/previews/GalionsTiktok.mp4"
-                },
-                {
-                    "id": "galions-2",
-                    "title": "Garen",
-                    "videoUrl": "./videos/Garen.mp4"
-                },
-                {
-                    "id": "galions-3",
-                    "title": "Emea",
-                    "videoUrl": "./videos/emea.mp4"
-                }
-            ]
-        },
-        {
-            "id": 11,
-            "title": "Les Rois sans couronnes",
-            "year": 2025,
-            "client": "Documentaire",
-            "description": "Personal documentary project featuring storytelling and atmospheric editing.",
-            "thumbnail": "./thumbnails/Docu.jpg",
-            "skills": [
-                "Prise de vue",
-                "Motion",
-                "Sound-Design",
-                "Réalisation"
-            ],
-            "collaborators": [
-                "MJM Graphic Design"
-            ],
-            "category": "Perso",
-            "format": "h",
-            "resolution": [
-                "2541",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "docu-1",
-                    "title": "Documentary",
-                    "videoUrl": "./videos/Documentaire.mp4",
-                    "previewUrl": "./videos/previews/Documentaire.mp4"
-                }
-            ]
-        },
-        {
-            "id": 12,
-            "title": "Voyage au Japon",
-            "year": 2025,
-            "client": "Japon",
-            "description": "Travel documentary capturing the essence of Japanese culture through  storytelling and atmospheric editing.",
-            "thumbnail": "./thumbnails/Japan.jpg",
-            "skills": [
-                "Prise de vue",
-                "Sound-Design"
-            ],
-            "collaborators": [],
-            "category": "Perso",
-            "format": "h",
-            "resolution": [
-                "1880",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "japan-1",
-                    "title": "Japan Travel - Part 1",
-                    "videoUrl": "./videos/JaponPart1.mp4",
-                    "previewUrl": "./videos/previews/JaponPart1.mp4"
-                },
-                {
-                    "id": "japan-2",
-                    "title": "Japan Travel - Part 2",
-                    "videoUrl": "./videos/JaponPart2.mp4"
-                }
-            ]
-        },
-        {
-            "id": 13,
-            "title": "Juyru",
-            "year": 2025,
-            "client": "Juyru",
-            "description": "Juyru",
-            "thumbnail": "./thumbnails/Juyru.jpg",
-            "skills": [
-                "Prise de vue"
-            ],
-            "collaborators": [
-                "MJM Graphic Design"
-            ],
-            "category": "Perso",
-            "format": "h",
-            "resolution": [
-                "1920",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "juyru-1",
-                    "title": "Juyru",
-                    "videoUrl": "./videos/Juyru.mp4",
-                    "previewUrl": "./videos/previews/Juyru.mp4"
-                }
-            ]
-        },
-        {
-            "id": 14,
-            "title": "Peet Aftermovie",
-            "year": 2025,
-            "client": "Peet",
-            "description": "Peet aftermovie pour son concert a la cigale",
-            "thumbnail": "./thumbnails/Peet.jpg",
-            "skills": [
-                "Motion",
-                "Prise de vue"
-            ],
-            "collaborators": [
-                "Baco Music"
-            ],
-            "category": "Music",
-            "format": "h",
-            "resolution": [
-                "1920",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "peet-1",
-                    "title": "Peet",
-                    "videoUrl": "./videos/Peet.mp4",
-                    "previewUrl": "./videos/previews/Peet.mp4"
-                }
-            ]
-        },
-        {
-            "id": 15,
-            "title": "?",
-            "year": 2025,
-            "client": "?",
-            "description": "?",
-            "thumbnail": "./thumbnails/Perso.jpg",
-            "skills": [
-                "Motion",
-                "Prise de vue"
-            ],
-            "collaborators": [
-                "MJM Graphic Design"
-            ],
-            "category": "Perso",
-            "format": "h",
-            "resolution": [
-                "1920",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "perso-1",
-                    "title": "?",
-                    "videoUrl": "./videos/Perso.mp4",
-                    "previewUrl": "./videos/previews/Perso.mp4"
-                }
-            ]
-        },
-        {
-            "id": 16,
-            "title": "Rimey 24HC",
-            "year": 2025,
-            "client": "Rimey",
-            "description": "Rimey 24HC",
-            "thumbnail": "./thumbnails/Rimey.jpg",
-            "skills": [
-                "Sound-Design",
-                "Motion"
-            ],
-            "collaborators": [],
-            "category": "E-sport",
-            "format": "h",
-            "resolution": [
-                "1920",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "rimey-1",
-                    "title": "Rimey 24HC",
-                    "videoUrl": "./videos/Rimey.mp4",
-                    "previewUrl": "./videos/previews/Rimey.mp4"
-                }
-            ]
-        },
-        {
-            "id": 17,
-            "title": "EJ Unlimited",
-            "year": 2025,
-            "client": "EJ Unlimited",
-            "description": "EJ unlimited",
-            "thumbnail": "./thumbnails/EJ.jpg",
-            "skills": [
-                "Sound-Design",
-                "Motion"
-            ],
-            "collaborators": [
-                "MJM Graphic Design"
-            ],
-            "category": "Perso",
-            "format": "h",
-            "resolution": [
-                "1920",
-                "1080"
-            ],
-            "videos": [
-                {
-                    "id": "ej-1",
-                    "title": "EJ Unlimited",
-                    "videoUrl": "./videos/EjUnlimited.mp4",
-                    "previewUrl": "./videos/previews/EjUnlimited.mp4"
-                }
-            ]
+          "id": "secret-7-track-1",
+          "title": "Secret 7 — Main Theme",
+          "src": "/Portofolio/Projects/Secret 7/music.wav",
+          "duration": 120
         }
-    ]
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "enchanted-forest",
+      "title": "Enchanted Forest",
+      "type": "collab",
+      "year": 2024,
+      "skills": [
+        "Sound design",
+        "Music production"
+      ],
+      "description": "Immersive soundscape and original score for the Enchanted Forest projection mapping installation. Layers of organic textures and evolving harmonics.",
+      "artwork": "/Portofolio/Projects/Enchanted Forest/cover.png",
+      "video": {
+        "src": "/Portofolio/Projects/Enchanted Forest/video.mov",
+        "preview": "/Portofolio/Projects/Enchanted Forest/video.mov",
+        "format": "h",
+        "resolution": [
+          3308,
+          1956
+        ]
+      },
+      "tracks": [
+        {
+          "id": "enchanted-forest-track-1",
+          "title": "Enchanted Forest — Ambiance",
+          "src": "/Portofolio/Projects/Enchanted Forest/music.wav",
+          "duration": 180
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "plantin-museum",
+      "title": "Plantin Museum",
+      "type": "collab",
+      "year": 2024,
+      "skills": [
+        "Sound design",
+        "Sound engineering"
+      ],
+      "description": "Original audio identity for the Plantin-Moretus Museum — a sonic journey through five centuries of printing history.",
+      "artwork": "/Portofolio/Projects/Plantin Museum/cover.png",
+      "video": {
+        "src": "/Portofolio/Projects/Plantin Museum/video.MP4",
+        "preview": "/Portofolio/Projects/Plantin Museum/video.MP4",
+        "format": "h",
+        "resolution": [
+          480,
+          854
+        ]
+      },
+      "tracks": [
+        {
+          "id": "plantin-museum-track-1",
+          "title": "Plantin Museum — Audio Identity",
+          "src": "/Portofolio/Projects/Plantin Museum/music.wav",
+          "duration": 210
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "projection",
+      "title": "Projection",
+      "type": "collab",
+      "year": 2025,
+      "skills": [
+        "Sound design",
+        "Music production"
+      ],
+      "description": "Live sound design for a projection mapping performance. Dynamic audio reacting to generative visuals in real time.",
+      "artwork": "/Portofolio/Projects/Projection/cover.png",
+      "video": {
+        "src": "/Portofolio/Projects/Projection/video.MP4",
+        "preview": "/Portofolio/Projects/Projection/video.MP4",
+        "format": "h",
+        "resolution": [
+          608,
+          1080
+        ]
+      },
+      "tracks": [
+        {
+          "id": "projection-track-1",
+          "title": "Projection — Live Set",
+          "src": "/Portofolio/Projects/Projection/music.wav",
+          "duration": 240
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "neon-echoes",
+      "title": "Neon Echoes",
+      "type": "music",
+      "year": 2025,
+      "skills": [
+        "Music production"
+      ],
+      "description": "An EP blending synthesizer textures with organic percussion. Four tracks exploring the tension between analog warmth and digital precision.",
+      "artwork": "/Portofolio/Musics/covers/01 - ride or die.jpg",
+      "tracks": [
+        {
+          "id": "neon-echoes-1",
+          "title": "Ride or Die",
+          "src": "/Portofolio/Musics/01 - ride or die.mp3",
+          "duration": 198
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "urban-canvas",
+      "title": "Urban Canvas",
+      "type": "collab",
+      "year": 2025,
+      "skills": [
+        "Mixing/Mastering"
+      ],
+      "description": "Mixing and mastering for a short film score set in the streets of Brussels. Cinematic dynamics and spatial depth.",
+      "artwork": "/Portofolio/Musics/covers/02 - memo - I’ve lost my fear to die.jpg",
+      "video": {
+        "src": "",
+        "preview": "",
+        "format": "h",
+        "resolution": [
+          1920,
+          1080
+        ]
+      },
+      "tracks": [
+        {
+          "id": "urban-canvas-1",
+          "title": "I've Lost My Fear to Die",
+          "src": "/Portofolio/Musics/02 - memo - I’ve lost my fear to die.mp3",
+          "duration": 176
+        }
+      ],
+      "collaborators": [
+        {
+          "name": "Studio Bruxelles"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "deep-current",
+      "title": "Deep Current",
+      "type": "music",
+      "year": 2025,
+      "skills": [
+        "Music production",
+        "Mixing/Mastering"
+      ],
+      "description": "Solo production project — deep house and ambient electronics. Mixed and mastered in-house.",
+      "artwork": "/Portofolio/Musics/covers/03 - memo - I love you sometimes.jpg",
+      "tracks": [
+        {
+          "id": "deep-current-1",
+          "title": "I Love You Sometimes",
+          "src": "/Portofolio/Musics/03 - memo - I love you sometimes.mp3",
+          "duration": 312
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "void-sessions",
+      "title": "Void Sessions",
+      "type": "collab",
+      "year": 2025,
+      "skills": [
+        "Sound design",
+        "Sound engineering"
+      ],
+      "description": "Sound design and field recording for a contemporary dance performance. Every cue crafted to shadow the choreography.",
+      "artwork": "/Portofolio/Musics/covers/04 - memo - Rain.jpg",
+      "video": {
+        "src": "",
+        "preview": "",
+        "format": "h",
+        "resolution": [
+          1920,
+          1080
+        ]
+      },
+      "tracks": [
+        {
+          "id": "void-sessions-1",
+          "title": "Rain (memo)",
+          "src": "/Portofolio/Musics/04 - memo - Rain.mp3",
+          "duration": 145
+        }
+      ],
+      "collaborators": [
+        {
+          "name": "Compagnie XYZ"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "luminara",
+      "title": "Luminara",
+      "type": "collab",
+      "year": 2024,
+      "skills": [
+        "Sound design"
+      ],
+      "description": "Atmospheric sound design for a light installation. Generative audio reacts to ambient light levels using custom Max/MSP patches.",
+      "artwork": "/Portofolio/Musics/covers/05 - Christmas Clouds.jpg",
+      "video": {
+        "src": "",
+        "preview": "",
+        "format": "h",
+        "resolution": [
+          1920,
+          1080
+        ]
+      },
+      "tracks": [
+        {
+          "id": "luminara-1",
+          "title": "Christmas Clouds",
+          "src": "/Portofolio/Musics/05 - Christmas Clouds.mp3",
+          "duration": 60
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "pulse-lab",
+      "title": "Pulse Lab",
+      "type": "music",
+      "year": 2025,
+      "skills": [
+        "Music production"
+      ],
+      "description": "Experimental electronic production exploring polyrhythm and micro-timing. Built entirely from modular synthesizer recordings.",
+      "artwork": "/Portofolio/Musics/covers/06 - Anything for you.jpg",
+      "tracks": [
+        {
+          "id": "pulse-lab-1",
+          "title": "Anything for You",
+          "src": "/Portofolio/Musics/06 - Anything for you.mp3",
+          "duration": 344
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "forest-frequency",
+      "title": "Forest Frequency",
+      "type": "collab",
+      "year": 2024,
+      "skills": [
+        "Sound engineering",
+        "Mixing/Mastering"
+      ],
+      "description": "Live sound engineering and post-production mix for an outdoor festival stage. Recorded, mixed, and delivered within 24 hours.",
+      "artwork": "/Portofolio/Musics/covers/07 - Rain.jpg",
+      "video": {
+        "src": "",
+        "preview": "",
+        "format": "h",
+        "resolution": [
+          1920,
+          1080
+        ]
+      },
+      "tracks": [
+        {
+          "id": "forest-frequency-1",
+          "title": "Rain",
+          "src": "/Portofolio/Musics/07 - Rain.mp3",
+          "duration": 3600
+        }
+      ],
+      "collaborators": [
+        {
+          "name": "Forest Festival"
+        }
+      ],
+      "links": []
+    },
+    {
+      "id": "midnight-drive",
+      "title": "Midnight Drive",
+      "type": "music",
+      "year": 2025,
+      "skills": [
+        "Music production",
+        "Mixing/Mastering"
+      ],
+      "description": "Late-night driving music. Slow-tempo beats, reverb-drenched chords, and field recordings from Brussels at 3am.",
+      "artwork": "/Portofolio/Musics/covers/08 - Minimalist.jpg",
+      "tracks": [
+        {
+          "id": "midnight-drive-1",
+          "title": "Minimalist",
+          "src": "/Portofolio/Musics/08 - Minimalist.mp3",
+          "duration": 291
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    }
+  ]
 }

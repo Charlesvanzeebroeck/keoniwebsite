@@ -1,11 +1,11 @@
-import './cursor.js';
 import { start } from './router.js';
+import { mount as mountNowPlaying } from './components/nowPlayingBar.js';
 
-// Register service worker once for the whole app (HTTPS required)
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     navigator.serviceWorker.register('/sw.js').catch(() => { });
 }
 
+const nowPlayingEl = document.getElementById('nowPlaying');
+if (nowPlayingEl) mountNowPlaying(nowPlayingEl);
+
 start();
-
-

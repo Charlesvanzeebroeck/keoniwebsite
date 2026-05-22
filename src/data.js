@@ -16,3 +16,17 @@ export async function loadProjects() {
         return [];
     }
 }
+
+export async function getAllTracks() {
+    const projects = await loadProjects();
+    const tracks = [];
+    for (const project of projects) {
+        if (!project.tracks) continue;
+        for (const track of project.tracks) {
+            if (track.src) {
+                tracks.push({ ...track, _project: project });
+            }
+        }
+    }
+    return tracks;
+}

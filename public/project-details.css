@@ -228,29 +228,6 @@ input[type='range'] {
     height: 2px !important;
 }
 
-/* Video Navigation Styles */
-.video-navigation {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.nav-btn span {
-    color: #1B1D1D;
-    font-family: "DM Sans", sans-serif;
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-}
-
-.nav-btn:disabled {
-    opacity: 0.3;
-    color: #ccc;
-}
-
-
-
 @media (max-width: 767px) {
 
     /* Ensure content is visible on mobile */
@@ -345,13 +322,6 @@ input[type='range'] {
     .format-v .custom-plyr-controls {
         width: 100%;
         padding: 1rem 0;
-    }
-
-    /* Show video navigation on mobile */
-    .video-navigation,
-    .format-v .video-navigation {
-        display: flex;
-        margin-bottom: 1rem;
     }
 
     /* Adjust skills section width for mobile */
