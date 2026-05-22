@@ -26,12 +26,12 @@ function renderInfo(project) {
     if (!infoEl) return;
 
     const skills = (project.skills || [])
-        .map(s => `<span class="pi-skill-pill">${s}</span>`).join('');
+        .map(s => `<span>${s}</span>`).join('');
 
     const collabs = (project.collaborators || []).map(c =>
         c.url
             ? `<a href="${c.url}" target="_blank" rel="noopener noreferrer" class="pi-collab-link">${c.name}</a>`
-            : `<span class="pi-collab">${c.name}</span>`
+            : c.name
     ).join(', ');
 
     const links = (project.links || []).map(l =>
@@ -60,9 +60,9 @@ function renderInfo(project) {
         </div>
         ${skills ? `<div class="pi-skills">${skills}</div>` : ''}
         ${project.description ? `<p class="pi-description">${project.description}</p>` : ''}
-        ${collabs ? `<p class="pi-collabs"><span class="pi-label">With</span> ${collabs}</p>` : ''}
+        ${collabs ? `<p class="pi-collabs">With ${collabs}</p>` : ''}
         ${links ? `<div class="pi-links">${links}</div>` : ''}
-        ${tracksWithMeta.length ? `<div class="pi-tracklist"><div class="pi-tracks">${trackRows}</div></div>` : ''}`;
+        ${tracksWithMeta.length ? `<div class="pi-tracklist">${trackRows}</div>` : ''}`;
 
     infoEl.querySelectorAll('.pi-track-row:not(.no-src)').forEach(row => {
         const idx = parseInt(row.dataset.trackIndex, 10);
@@ -72,29 +72,32 @@ function renderInfo(project) {
     });
 
     syncTrackHighlight();
+    revealInfo();
+}
+
+function revealInfo() {
+    if (!infoEl) return;
+    const children = Array.from(infoEl.children);
+    if (!children.length) return;
+    gsap.fromTo(children,
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', stagger: 0.06, clearProps: 'transform' }
+    );
 }
 
 function sizeMediaWrapper(res) {
     if (!frameMediaEl) return;
-    const parent = frameMediaEl.parentElement;
-    if (!parent) return;
-    const pw = parent.clientWidth;
-    const ph = parent.clientHeight;
-    if (!res || res.length !== 2 || !pw || !ph) {
-        frameMediaEl.style.width = '';
-        frameMediaEl.style.height = '';
+    if (!res || res.length !== 2) {
+        frameMediaEl.style.aspectRatio = '';
         return;
     }
     const [vw, vh] = res;
-    const ratio = vw / vh;
-    let w = pw, h = pw / ratio;
-    if (h > ph) { h = ph; w = ph * ratio; }
-    frameMediaEl.style.width = `${w}px`;
-    frameMediaEl.style.height = `${h}px`;
+    frameMediaEl.style.aspectRatio = `${vw} / ${vh}`;
 }
 
-function renderFrame(project) {
+function renderFrame(project, opts = {}) {
     if (!frameMediaEl) return;
+    const { silent = false } = opts;
 
     const hasVideo = project.type === 'collab' && project.video?.src;
     const src = hasVideo ? project.video.src : project.artwork;
@@ -107,16 +110,19 @@ function renderFrame(project) {
 
     if (hasVideo) {
         const video = document.createElement('video');
-        video.autoplay = true;
+        video.autoplay = !silent;
         video.muted = true;
         video.loop = true;
         video.playsInline = true;
+        video.preload = silent ? 'none' : 'auto';
         const source = document.createElement('source');
         source.src = encodedSrc;
         source.type = 'video/mp4';
         video.appendChild(source);
-        video.load();
-        video.play().catch(() => {});
+        if (!silent) {
+            video.load();
+            video.play().catch(() => {});
+        }
         frameMediaEl.appendChild(video);
     } else {
         const img = document.createElement('img');
@@ -128,15 +134,16 @@ function renderFrame(project) {
     const blur = document.createElement('div');
     blur.className = 'frame-blur';
     blur.innerHTML = `
-        <div class="frame-blur-layer" style="backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);mask-image:linear-gradient(to bottom, transparent 0%, black 25%);-webkit-mask-image:linear-gradient(to bottom, transparent 0%, black 25%);"></div>
-        <div class="frame-blur-layer" style="backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);mask-image:linear-gradient(to bottom, transparent 35%, black 65%);-webkit-mask-image:linear-gradient(to bottom, transparent 35%, black 65%);"></div>
-        <div class="frame-blur-layer" style="backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);mask-image:linear-gradient(to bottom, transparent 60%, black 90%);-webkit-mask-image:linear-gradient(to bottom, transparent 60%, black 90%);"></div>
+        <div class="frame-blur-layer" style="backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);mask-image:linear-gradient(to right, black 0%, black 55%, transparent 85%);-webkit-mask-image:linear-gradient(to right, black 0%, black 55%, transparent 85%);"></div>
+        <div class="frame-blur-layer" style="backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);mask-image:linear-gradient(to right, black 0%, black 30%, transparent 65%);-webkit-mask-image:linear-gradient(to right, black 0%, black 30%, transparent 65%);"></div>
+        <div class="frame-blur-layer" style="backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);mask-image:linear-gradient(to right, black 0%, black 10%, transparent 40%);-webkit-mask-image:linear-gradient(to right, black 0%, black 10%, transparent 40%);"></div>
         <div class="frame-blur-tint"></div>`;
     frameMediaEl.appendChild(blur);
 }
 
-export function select(project) {
+export function select(project, opts = {}) {
     if (!project) return;
+    const { silent = false } = opts;
     currentProject = project;
 
     if (unsubPlayer) { unsubPlayer(); unsubPlayer = null; }
@@ -145,13 +152,15 @@ export function select(project) {
     const incoming = frameMediaEl;
     gsap.to(incoming, {
         opacity: 0, duration: 0.2, onComplete: () => {
-            renderFrame(project);
+            renderFrame(project, { silent });
             gsap.to(incoming, { opacity: 1, duration: 0.3 });
         }
     });
 
     renderInfo(project);
     unsubPlayer = player.on('statechange', syncTrackHighlight);
+
+    if (silent) return;
 
     const tracksWithMeta = (project.tracks || []).map(t => ({ ...t, _project: project }));
     const firstPlayable = tracksWithMeta.find(t => t.src);

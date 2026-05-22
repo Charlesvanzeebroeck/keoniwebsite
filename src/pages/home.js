@@ -1,7 +1,6 @@
-import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { buildIntroTimeline } from './home.gsap.js';
-import { mount as mountGallery } from '../components/gallery.js';
+import { mount as mountGallery, destroy as destroyGallery } from '../components/gallery.js';
 import { mount as mountPanel, select as selectProject, destroy as destroyPanel } from '../components/projectPanel.js';
 import * as player from '../audioPlayer.js';
 
@@ -14,78 +13,177 @@ const HERO_TRACK = {
 
 let videoRef = null;
 let introTl = null;
+let heroPreloadAudio = null;
+let unsubHero = null;
+let deferredMountTimer = null;
+
+const PLAY_ICON = `<svg viewBox="0 0 24 24" fill="none"><path d="M5 3L19 12L5 21V3Z" fill="#fff"/></svg>`;
+const PAUSE_ICON = `<svg viewBox="0 0 24 24" fill="none"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>`;
 
 export async function init(rootEl, ctx) {
     const video = rootEl.querySelector('#player');
     if (!video) return;
     videoRef = video;
-
-    // Hero video autoplay
-    const tryPlay = () => {
-        try {
-            const p = video.play();
-            if (p?.catch) p.catch(() => {});
-        } catch (_) {}
-    };
     video.muted = true;
     video.playsInline = true;
-    video.load();
-    tryPlay();
-    setTimeout(tryPlay, 60);
-    video.addEventListener('canplay', tryPlay, { once: true });
-    if (document.visibilityState === 'visible') setTimeout(tryPlay, 150);
-    document.addEventListener('click', tryPlay, { once: true });
-    document.addEventListener('touchstart', tryPlay, { once: true });
-    video.addEventListener('pause', () => video.play());
 
-    // Hero play/pause overlay — drives the audio player with the hero song
+    // Hero audio preloader — kicks off the byte download so audioPlayer's
+    // <audio> element hits the HTTP cache the moment the user clicks.
+    heroPreloadAudio = new Audio();
+    heroPreloadAudio.preload = 'auto';
+    heroPreloadAudio.src = HERO_TRACK.src;
+
+    let videoReady = false;
+    let audioReady = false;
+    let wantsPlay = false;
+    let started = false;
+
+    // Overlay UI
     const heroEl = video.parentElement;
-    let unsubHero = null;
+    const overlay = document.createElement('button');
+    overlay.className = 'sound-overlay';
+    overlay.setAttribute('aria-label', 'Play/pause hero theme');
+    overlay.innerHTML = PLAY_ICON;
     if (heroEl) {
-        const overlay = document.createElement('button');
-        overlay.className = 'sound-overlay';
-        overlay.setAttribute('aria-label', 'Play/pause hero theme');
-        const updateIcon = () => {
-            const s = player.getState();
-            const isHeroPlaying = s.track?.id === HERO_TRACK.id && s.playing;
-            overlay.innerHTML = isHeroPlaying
-                ? `<svg viewBox="0 0 24 24" fill="none"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>`
-                : `<svg viewBox="0 0 24 24" fill="none"><path d="M5 3L19 12L5 21V3Z" fill="#fff"/></svg>`;
-        };
-        updateIcon();
         heroEl.appendChild(overlay);
         heroEl.addEventListener('mouseenter', () => overlay.classList.add('visible'));
         heroEl.addEventListener('mouseleave', () => overlay.classList.remove('visible'));
-        overlay.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const s = player.getState();
-            if (s.track?.id === HERO_TRACK.id) {
-                player.toggle();
-            } else {
-                player.playTrack(HERO_TRACK, [HERO_TRACK]);
-            }
-        });
-        unsubHero = player.on('statechange', updateIcon);
-        videoRef._unsubHero = unsubHero;
     }
 
-    // Panel + gallery
-    const frameMediaEl = rootEl.querySelector('#projectFrameMedia');
-    const infoEl = rootEl.querySelector('#projectInfo');
-    const rowEl = rootEl.querySelector('#projectRow');
+    const setLoading = (loading) => {
+        overlay.style.opacity = loading ? '0.5' : '';
+        overlay.style.cursor = loading ? 'progress' : '';
+    };
 
-    if (frameMediaEl && infoEl) mountPanel(frameMediaEl, infoEl);
-    if (rowEl) mountGallery(rowEl, (project) => selectProject(project));
+    const updateIcon = () => {
+        const s = player.getState();
+        const isHeroPlaying = s.track?.id === HERO_TRACK.id && s.playing;
+        overlay.innerHTML = isHeroPlaying ? PAUSE_ICON : PLAY_ICON;
+    };
 
-    // GSAP intro
-    introTl = buildIntroTimeline();
+    const startSynced = () => {
+        if (started) return;
+        started = true;
+        setLoading(false);
+        try { video.currentTime = 0; } catch (_) {}
+        // playTrack will play the audio; once it actually starts, we sync the video.
+        player.playTrack(HERO_TRACK, [HERO_TRACK]);
+    };
+
+    const attemptStart = () => {
+        if (wantsPlay && videoReady && audioReady && !started) startSynced();
+    };
+
+    // Readiness tracking
+    const markVideoReady = () => {
+        videoReady = true;
+        attemptStart();
+    };
+    const markAudioReady = () => {
+        audioReady = true;
+        attemptStart();
+    };
+
+    if (video.readyState >= 4) videoReady = true;
+    else {
+        video.addEventListener('canplaythrough', markVideoReady, { once: true });
+        // Fallback: canplay is good enough if canplaythrough never fires (some browsers/streams).
+        video.addEventListener('canplay', markVideoReady, { once: true });
+    }
+    if (heroPreloadAudio.readyState >= 4) audioReady = true;
+    else {
+        heroPreloadAudio.addEventListener('canplaythrough', markAudioReady, { once: true });
+        heroPreloadAudio.addEventListener('canplay', markAudioReady, { once: true });
+    }
+
+    // Force the video to actually buffer (preload=auto from markup should already do this, but be explicit).
+    try { video.load(); } catch (_) {}
+
+    overlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const s = player.getState();
+        if (s.track?.id === HERO_TRACK.id && started) {
+            // Toggle pause/resume. Video follows via statechange listener below.
+            player.toggle();
+            return;
+        }
+        wantsPlay = true;
+        if (videoReady && audioReady) {
+            startSynced();
+        } else {
+            setLoading(true);
+        }
+    });
+
+    // Keep video in lockstep with the audio player's state.
+    const onState = () => {
+        updateIcon();
+        const s = player.getState();
+        if (s.track?.id !== HERO_TRACK.id) {
+            // Another track is playing — pause hero video.
+            if (!video.paused) { try { video.pause(); } catch (_) {} }
+            return;
+        }
+        if (s.playing) {
+            if (video.paused) {
+                try { video.currentTime = s.currentTime || 0; } catch (_) {}
+                video.play().catch(() => {});
+            }
+        } else {
+            if (!video.paused) { try { video.pause(); } catch (_) {} }
+        }
+    };
+    unsubHero = player.on('statechange', onState);
+
+    // Drift guard — keep video locked to audio clock (audio is the master).
+    const onTick = (data) => {
+        const s = player.getState();
+        if (s.track?.id !== HERO_TRACK.id || !s.playing) return;
+        const drift = Math.abs(video.currentTime - data.currentTime);
+        if (drift > 0.15 && isFinite(data.currentTime)) {
+            try { video.currentTime = data.currentTime; } catch (_) {}
+        }
+    };
+    const unsubTick = player.on('timeupdate', onTick);
+    videoRef._unsubTick = unsubTick;
+    videoRef._unsubHero = unsubHero;
+
+    // Defer heavy mounts (gallery, project panel, GSAP intro) until the
+    // hero video has buffered enough. Fall back after 1.5s to avoid lockup.
+    let restMounted = false;
+    const mountRest = () => {
+        if (restMounted) return;
+        restMounted = true;
+        if (deferredMountTimer) { clearTimeout(deferredMountTimer); deferredMountTimer = null; }
+        const frameMediaEl = rootEl.querySelector('#projectFrameMedia');
+        const infoEl = rootEl.querySelector('#projectInfo');
+        const rowEl = rootEl.querySelector('#projectRow');
+        if (frameMediaEl && infoEl) mountPanel(frameMediaEl, infoEl);
+        if (rowEl) mountGallery(rowEl, (project, opts) => selectProject(project, opts));
+        introTl = buildIntroTimeline();
+    };
+
+    if (video.readyState >= 3) {
+        mountRest();
+    } else {
+        video.addEventListener('canplaythrough', mountRest, { once: true });
+        video.addEventListener('canplay', mountRest, { once: true });
+        deferredMountTimer = setTimeout(mountRest, 1500);
+    }
 }
 
 export async function destroy() {
+    if (deferredMountTimer) { clearTimeout(deferredMountTimer); deferredMountTimer = null; }
     if (introTl) { introTl.kill(); introTl = null; }
     ScrollTrigger.getAll().forEach(t => t.kill());
     destroyPanel();
-    if (videoRef?._unsubHero) { videoRef._unsubHero(); }
+    destroyGallery();
+    if (videoRef?._unsubHero) videoRef._unsubHero();
+    if (videoRef?._unsubTick) videoRef._unsubTick();
+    if (heroPreloadAudio) {
+        try { heroPreloadAudio.pause(); heroPreloadAudio.src = ''; } catch (_) {}
+        heroPreloadAudio = null;
+    }
     if (!videoRef) return;
     try { videoRef.pause(); } catch (_) {}
     try {
