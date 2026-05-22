@@ -24,7 +24,7 @@
         {
           "id": "secret-7-track-1",
           "title": "Secret 7 — Main Theme",
-          "src": "/Portofolio/Projects/Secret 7/music.wav",
+          "src": "/Portofolio/Projects/Secret 7/music.mp3",
           "duration": 120
         }
       ],
@@ -43,19 +43,19 @@
       "description": "Immersive soundscape and original score for the Enchanted Forest projection mapping installation. Layers of organic textures and evolving harmonics.",
       "artwork": "/Portofolio/Projects/Enchanted Forest/cover.png",
       "video": {
-        "src": "/Portofolio/Projects/Enchanted Forest/video.mov",
-        "preview": "/Portofolio/Projects/Enchanted Forest/video.mov",
+        "src": "/Portofolio/Projects/Enchanted Forest/video.mp4",
+        "preview": "/Portofolio/Projects/Enchanted Forest/video.mp4",
         "format": "h",
         "resolution": [
-          3308,
-          1956
+          1280,
+          756
         ]
       },
       "tracks": [
         {
           "id": "enchanted-forest-track-1",
           "title": "Enchanted Forest — Ambiance",
-          "src": "/Portofolio/Projects/Enchanted Forest/music.wav",
+          "src": "/Portofolio/Projects/Enchanted Forest/music.mp3",
           "duration": 180
         }
       ],
@@ -74,8 +74,8 @@
       "description": "Original audio identity for the Plantin-Moretus Museum — a sonic journey through five centuries of printing history.",
       "artwork": "/Portofolio/Projects/Plantin Museum/cover.png",
       "video": {
-        "src": "/Portofolio/Projects/Plantin Museum/video.MP4",
-        "preview": "/Portofolio/Projects/Plantin Museum/video.MP4",
+        "src": "/Portofolio/Projects/Plantin Museum/video.mp4",
+        "preview": "/Portofolio/Projects/Plantin Museum/video.mp4",
         "format": "h",
         "resolution": [
           480,
@@ -86,7 +86,7 @@
         {
           "id": "plantin-museum-track-1",
           "title": "Plantin Museum — Audio Identity",
-          "src": "/Portofolio/Projects/Plantin Museum/music.wav",
+          "src": "/Portofolio/Projects/Plantin Museum/music.mp3",
           "duration": 210
         }
       ],
@@ -105,8 +105,8 @@
       "description": "Live sound design for a projection mapping performance. Dynamic audio reacting to generative visuals in real time.",
       "artwork": "/Portofolio/Projects/Projection/cover.png",
       "video": {
-        "src": "/Portofolio/Projects/Projection/video.MP4",
-        "preview": "/Portofolio/Projects/Projection/video.MP4",
+        "src": "/Portofolio/Projects/Projection/video.mp4",
+        "preview": "/Portofolio/Projects/Projection/video.mp4",
         "format": "h",
         "resolution": [
           608,
@@ -117,7 +117,7 @@
         {
           "id": "projection-track-1",
           "title": "Projection — Live Set",
-          "src": "/Portofolio/Projects/Projection/music.wav",
+          "src": "/Portofolio/Projects/Projection/music.mp3",
           "duration": 240
         }
       ],
