@@ -108,13 +108,17 @@ function renderFrame(project, opts = {}) {
     const res = project.video?.resolution;
     sizeMediaWrapper(res);
 
+    const fmt = project.artworkFormats || {};
+    const posterSrc = fmt.medium || fmt.large || fmt.small || project.artwork;
+
     if (hasVideo) {
         const video = document.createElement('video');
         video.autoplay = !silent;
         video.muted = true;
         video.loop = true;
         video.playsInline = true;
-        video.preload = silent ? 'none' : 'auto';
+        video.preload = silent ? 'none' : 'metadata';
+        if (posterSrc) video.poster = encodeURI(posterSrc);
         const source = document.createElement('source');
         source.src = encodedSrc;
         source.type = 'video/mp4';
@@ -126,8 +130,19 @@ function renderFrame(project, opts = {}) {
         frameMediaEl.appendChild(video);
     } else {
         const img = document.createElement('img');
-        img.src = encodedSrc;
+        const srcset = [
+            fmt.small && `${encodeURI(fmt.small)} 500w`,
+            fmt.medium && `${encodeURI(fmt.medium)} 750w`,
+            fmt.large && `${encodeURI(fmt.large)} 1000w`,
+        ].filter(Boolean).join(', ');
+        if (srcset) {
+            img.srcset = srcset;
+            img.sizes = '(max-width: 768px) 100vw, 60vw';
+        }
+        img.src = encodeURI(fmt.large || fmt.medium || project.artwork || src);
         img.alt = project.title;
+        img.loading = 'lazy';
+        img.decoding = 'async';
         frameMediaEl.appendChild(img);
     }
 

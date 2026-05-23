@@ -86,10 +86,12 @@ function buildDisc(project) {
   div.setAttribute("tabindex", "0");
   div.setAttribute("aria-label", project.title);
 
-  const encodedArt = encodeURI(project.artwork || "");
+  const fmt = project.artworkFormats || {};
+  const thumb = fmt.small || fmt.thumbnail || project.artwork || "";
+  const encodedArt = encodeURI(thumb);
   div.innerHTML = `
         <div class="disc-tilt-inner">
-            <img src="${encodedArt}" alt="${project.title}" loading="lazy" draggable="false">
+            <img src="${encodedArt}" alt="${project.title}" loading="lazy" decoding="async" draggable="false">
             <div class="disc-year-badge">${project.year}</div>
             <div class="disc-playing-badge" aria-hidden="true"><span></span><span></span><span></span></div>
         </div>`;

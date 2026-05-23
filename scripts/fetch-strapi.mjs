@@ -1,12 +1,17 @@
 #!/usr/bin/env node
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Readable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+import { createWriteStream } from 'node:fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const OUTPUT = resolve(ROOT, 'public/projects.json');
+const MEDIA_DIR = resolve(ROOT, 'public/cms');
+const MEDIA_PREFIX = '/cms';
 const ENV_FILE = resolve(ROOT, '.env');
 
 if (existsSync(ENV_FILE) && !process.env.STRAPI_URL) {
@@ -35,12 +40,56 @@ function abs(url) {
     return STRAPI_URL + (url.startsWith('/') ? url : '/' + url);
 }
 
-function mapTrack(t, projectSlug, i) {
+const downloadPromises = new Map();
+let stats = { downloaded: 0, cached: 0, bytes: 0 };
+
+async function downloadOnce(absUrl) {
+    if (!absUrl) return absUrl;
+    if (downloadPromises.has(absUrl)) return downloadPromises.get(absUrl);
+    const p = (async () => {
+        const name = basename(new URL(absUrl).pathname);
+        const dest = resolve(MEDIA_DIR, name);
+        const localUrl = `${MEDIA_PREFIX}/${name}`;
+        if (existsSync(dest)) {
+            stats.cached++;
+            return localUrl;
+        }
+        await mkdir(MEDIA_DIR, { recursive: true });
+        const res = await fetch(absUrl);
+        if (!res.ok || !res.body) {
+            console.warn(`  ⚠ download failed ${res.status} ${absUrl}`);
+            return absUrl;
+        }
+        await pipeline(Readable.fromWeb(res.body), createWriteStream(dest));
+        const size = (await stat(dest)).size;
+        stats.downloaded++;
+        stats.bytes += size;
+        return localUrl;
+    })();
+    downloadPromises.set(absUrl, p);
+    return p;
+}
+
+async function localize(url) {
+    if (!url) return url;
+    return downloadOnce(abs(url));
+}
+
+async function localizeFormats(formats) {
+    if (!formats) return undefined;
+    const out = {};
+    for (const [k, v] of Object.entries(formats)) {
+        out[k] = await downloadOnce(v);
+    }
+    return out;
+}
+
+async function mapTrack(t, projectSlug, i) {
     const file = t.file || {};
     return {
         id: `${projectSlug}-track-${i + 1}`,
         title: t.title,
-        src: abs(file.url),
+        src: await localize(file.url),
         ...(t.duration != null ? { duration: t.duration } : {}),
     };
 }
@@ -50,19 +99,36 @@ function defaultResolution(format) {
     return [16, 9];
 }
 
-function mapVideo(v) {
+function extractFormats(media) {
+    if (!media?.formats) return undefined;
+    const out = {};
+    for (const key of ['thumbnail', 'small', 'medium', 'large']) {
+        const f = media.formats[key];
+        if (f?.url) out[key] = abs(f.url);
+    }
+    return Object.keys(out).length ? out : undefined;
+}
+
+async function mapVideo(v) {
     if (!v) return undefined;
     const file = v.file || {};
+    const src = await localize(file.url);
     return {
-        src: abs(file.url),
-        preview: abs(file.url),
+        src,
+        preview: src,
         format: v.format,
         resolution: Array.isArray(v.resolution) && v.resolution.length === 2 ? v.resolution : defaultResolution(v.format),
     };
 }
 
-function mapProject(entry) {
+async function mapProject(entry) {
     const slug = entry.slug || entry.documentId;
+    const [artwork, artworkFormats, video, tracks] = await Promise.all([
+        localize(entry.artwork?.url),
+        localizeFormats(extractFormats(entry.artwork)),
+        mapVideo(entry.video),
+        Promise.all((entry.tracks || []).map((t, i) => mapTrack(t, slug, i))),
+    ]);
     return {
         id: slug,
         title: entry.title,
@@ -70,9 +136,10 @@ function mapProject(entry) {
         year: entry.year,
         skills: entry.skills || [],
         description: entry.description || '',
-        artwork: abs(entry.artwork?.url),
-        video: mapVideo(entry.video),
-        tracks: (entry.tracks || []).map((t, i) => mapTrack(t, slug, i)),
+        artwork,
+        artworkFormats,
+        video,
+        tracks,
         collaborators: entry.collaborators || [],
         links: entry.links || [],
     };
@@ -108,6 +175,7 @@ if (entries.length === 0) {
     process.exit(0);
 }
 
-const projects = entries.map(mapProject);
+const projects = await Promise.all(entries.map(mapProject));
 await writeFile(OUTPUT, JSON.stringify({ projects }, null, 2) + '\n', 'utf8');
 console.log(`[fetch-strapi] Wrote ${projects.length} projects → public/projects.json`);
+console.log(`[fetch-strapi] Media: ${stats.downloaded} downloaded (${(stats.bytes / 1024 / 1024).toFixed(1)} MB), ${stats.cached} cached`);

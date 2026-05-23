@@ -1,129 +1,6 @@
 {
   "projects": [
     {
-      "id": "fever-shiver",
-      "title": "Fever Shiver",
-      "type": "collab",
-      "year": 2025,
-      "skills": [
-        "Sound design",
-        "Music production"
-      ],
-      "description": "Landing piece — original score and sound design woven into the hero film.",
-      "artwork": "/Portofolio/Projects/FeverShiver/cover.jpeg",
-      "video": {
-        "src": "/Portofolio/landingvideo.mp4",
-        "preview": "/Portofolio/landingvideo.mp4",
-        "format": "h",
-        "resolution": [
-          1280,
-          720
-        ]
-      },
-      "tracks": [
-        {
-          "id": "fever-shiver-1",
-          "title": "Fever Shiver — Hero Theme",
-          "src": "/Portofolio/landingong.mp3"
-        }
-      ],
-      "collaborators": [],
-      "links": []
-    },
-    {
-      "id": "secret-7",
-      "title": "Secret 7",
-      "type": "collab",
-      "year": 2024,
-      "skills": [
-        "Sound design",
-        "Music production"
-      ],
-      "description": "Sound design and original composition for the Secret 7 vinyl artwork exhibition. Seven tracks reimagined as seven soundscapes.",
-      "artwork": "/Portofolio/Projects/Secret 7/cover.png",
-      "video": {
-        "src": "/Portofolio/Projects/Secret 7/video.mp4",
-        "preview": "/Portofolio/Projects/Secret 7/video.mp4",
-        "format": "v",
-        "resolution": [
-          810,
-          1080
-        ]
-      },
-      "tracks": [
-        {
-          "id": "secret-7-track-1",
-          "title": "Secret 7 — Main Theme",
-          "src": "/Portofolio/Projects/Secret 7/music.mp3",
-          "duration": 120
-        }
-      ],
-      "collaborators": [],
-      "links": []
-    },
-    {
-      "id": "enchanted-forest",
-      "title": "Enchanted Forest",
-      "type": "collab",
-      "year": 2024,
-      "skills": [
-        "Sound design",
-        "Music production"
-      ],
-      "description": "Immersive soundscape and original score for the Enchanted Forest projection mapping installation. Layers of organic textures and evolving harmonics.",
-      "artwork": "/Portofolio/Projects/Enchanted Forest/cover.png",
-      "video": {
-        "src": "/Portofolio/Projects/Enchanted Forest/video.mp4",
-        "preview": "/Portofolio/Projects/Enchanted Forest/video.mp4",
-        "format": "h",
-        "resolution": [
-          1280,
-          756
-        ]
-      },
-      "tracks": [
-        {
-          "id": "enchanted-forest-track-1",
-          "title": "Enchanted Forest — Ambiance",
-          "src": "/Portofolio/Projects/Enchanted Forest/music.mp3",
-          "duration": 180
-        }
-      ],
-      "collaborators": [],
-      "links": []
-    },
-    {
-      "id": "plantin-museum",
-      "title": "Plantin Museum",
-      "type": "collab",
-      "year": 2024,
-      "skills": [
-        "Sound design",
-        "Sound engineering"
-      ],
-      "description": "Original audio identity for the Plantin-Moretus Museum — a sonic journey through five centuries of printing history.",
-      "artwork": "/Portofolio/Projects/Plantin Museum/cover.png",
-      "video": {
-        "src": "/Portofolio/Projects/Plantin Museum/video.mp4",
-        "preview": "/Portofolio/Projects/Plantin Museum/video.mp4",
-        "format": "h",
-        "resolution": [
-          480,
-          854
-        ]
-      },
-      "tracks": [
-        {
-          "id": "plantin-museum-track-1",
-          "title": "Plantin Museum — Audio Identity",
-          "src": "/Portofolio/Projects/Plantin Museum/music.mp3",
-          "duration": 210
-        }
-      ],
-      "collaborators": [],
-      "links": []
-    },
-    {
       "id": "projection",
       "title": "Projection",
       "type": "collab",
@@ -133,10 +10,16 @@
         "Music production"
       ],
       "description": "Live sound design for a projection mapping performance. Dynamic audio reacting to generative visuals in real time.",
-      "artwork": "/Portofolio/Projects/Projection/cover.png",
+      "artwork": "/cms/cover_11a3ab7c32.png",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_cover_11a3ab7c32.png",
+        "small": "/cms/small_cover_11a3ab7c32.png",
+        "medium": "/cms/medium_cover_11a3ab7c32.png",
+        "large": "/cms/large_cover_11a3ab7c32.png"
+      },
       "video": {
-        "src": "/Portofolio/Projects/Projection/video.mp4",
-        "preview": "/Portofolio/Projects/Projection/video.mp4",
+        "src": "/cms/video_3aadf9cc1d.mp4",
+        "preview": "/cms/video_3aadf9cc1d.mp4",
         "format": "h",
         "resolution": [
           608,
@@ -147,7 +30,7 @@
         {
           "id": "projection-track-1",
           "title": "Projection — Live Set",
-          "src": "/Portofolio/Projects/Projection/music.mp3",
+          "src": "/cms/music_cf7a488d3e.mp3",
           "duration": 240
         }
       ],
@@ -163,12 +46,18 @@
         "Music production"
       ],
       "description": "An EP blending synthesizer textures with organic percussion. Four tracks exploring the tension between analog warmth and digital precision.",
-      "artwork": "/Portofolio/Musics/covers/01 - ride or die.jpg",
+      "artwork": "/cms/01_ride_or_die_4c05b50947.jpg",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_01_ride_or_die_4c05b50947.jpg",
+        "small": "/cms/small_01_ride_or_die_4c05b50947.jpg",
+        "medium": "/cms/medium_01_ride_or_die_4c05b50947.jpg",
+        "large": "/cms/large_01_ride_or_die_4c05b50947.jpg"
+      },
       "tracks": [
         {
-          "id": "neon-echoes-1",
+          "id": "neon-echoes-track-1",
           "title": "Ride or Die",
-          "src": "/Portofolio/Musics/01 - ride or die.mp3",
+          "src": "/cms/01_ride_or_die_0b25a4e66b.mp3",
           "duration": 198
         }
       ],
@@ -184,27 +73,26 @@
         "Mixing/Mastering"
       ],
       "description": "Mixing and mastering for a short film score set in the streets of Brussels. Cinematic dynamics and spatial depth.",
-      "artwork": "/Portofolio/Musics/covers/02 - memo - I’ve lost my fear to die.jpg",
-      "video": {
-        "src": "",
-        "preview": "",
-        "format": "h",
-        "resolution": [
-          1920,
-          1080
-        ]
+      "artwork": "/cms/02_memo_I_ve_lost_my_fear_to_die_478d8e5cf5.jpg",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_02_memo_I_ve_lost_my_fear_to_die_478d8e5cf5.jpg",
+        "small": "/cms/small_02_memo_I_ve_lost_my_fear_to_die_478d8e5cf5.jpg",
+        "medium": "/cms/medium_02_memo_I_ve_lost_my_fear_to_die_478d8e5cf5.jpg",
+        "large": "/cms/large_02_memo_I_ve_lost_my_fear_to_die_478d8e5cf5.jpg"
       },
       "tracks": [
         {
-          "id": "urban-canvas-1",
+          "id": "urban-canvas-track-1",
           "title": "I've Lost My Fear to Die",
-          "src": "/Portofolio/Musics/02 - memo - I’ve lost my fear to die.mp3",
+          "src": "/cms/02_memo_I_ve_lost_my_fear_to_die_4cf655abaf.mp3",
           "duration": 176
         }
       ],
       "collaborators": [
         {
-          "name": "Studio Bruxelles"
+          "id": 2,
+          "name": "Studio Bruxelles",
+          "url": ""
         }
       ],
       "links": []
@@ -219,12 +107,18 @@
         "Mixing/Mastering"
       ],
       "description": "Solo production project — deep house and ambient electronics. Mixed and mastered in-house.",
-      "artwork": "/Portofolio/Musics/covers/03 - memo - I love you sometimes.jpg",
+      "artwork": "/cms/03_memo_I_love_you_sometimes_be01ee677a.jpg",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_03_memo_I_love_you_sometimes_be01ee677a.jpg",
+        "small": "/cms/small_03_memo_I_love_you_sometimes_be01ee677a.jpg",
+        "medium": "/cms/medium_03_memo_I_love_you_sometimes_be01ee677a.jpg",
+        "large": "/cms/large_03_memo_I_love_you_sometimes_be01ee677a.jpg"
+      },
       "tracks": [
         {
-          "id": "deep-current-1",
+          "id": "deep-current-track-1",
           "title": "I Love You Sometimes",
-          "src": "/Portofolio/Musics/03 - memo - I love you sometimes.mp3",
+          "src": "/cms/03_memo_I_love_you_sometimes_5d9e06ee1a.mp3",
           "duration": 312
         }
       ],
@@ -241,59 +135,28 @@
         "Sound engineering"
       ],
       "description": "Sound design and field recording for a contemporary dance performance. Every cue crafted to shadow the choreography.",
-      "artwork": "/Portofolio/Musics/covers/04 - memo - Rain.jpg",
-      "video": {
-        "src": "",
-        "preview": "",
-        "format": "h",
-        "resolution": [
-          1920,
-          1080
-        ]
+      "artwork": "/cms/04_memo_Rain_350bdd7a7c.jpg",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_04_memo_Rain_350bdd7a7c.jpg",
+        "small": "/cms/small_04_memo_Rain_350bdd7a7c.jpg",
+        "medium": "/cms/medium_04_memo_Rain_350bdd7a7c.jpg",
+        "large": "/cms/large_04_memo_Rain_350bdd7a7c.jpg"
       },
       "tracks": [
         {
-          "id": "void-sessions-1",
+          "id": "void-sessions-track-1",
           "title": "Rain (memo)",
-          "src": "/Portofolio/Musics/04 - memo - Rain.mp3",
+          "src": "/cms/04_memo_Rain_f90f7c99c1.mp3",
           "duration": 145
         }
       ],
       "collaborators": [
         {
-          "name": "Compagnie XYZ"
+          "id": 4,
+          "name": "Compagnie XYZ",
+          "url": ""
         }
       ],
-      "links": []
-    },
-    {
-      "id": "luminara",
-      "title": "Luminara",
-      "type": "collab",
-      "year": 2024,
-      "skills": [
-        "Sound design"
-      ],
-      "description": "Atmospheric sound design for a light installation. Generative audio reacts to ambient light levels using custom Max/MSP patches.",
-      "artwork": "/Portofolio/Musics/covers/05 - Christmas Clouds.jpg",
-      "video": {
-        "src": "",
-        "preview": "",
-        "format": "h",
-        "resolution": [
-          1920,
-          1080
-        ]
-      },
-      "tracks": [
-        {
-          "id": "luminara-1",
-          "title": "Christmas Clouds",
-          "src": "/Portofolio/Musics/05 - Christmas Clouds.mp3",
-          "duration": 60
-        }
-      ],
-      "collaborators": [],
       "links": []
     },
     {
@@ -305,13 +168,221 @@
         "Music production"
       ],
       "description": "Experimental electronic production exploring polyrhythm and micro-timing. Built entirely from modular synthesizer recordings.",
-      "artwork": "/Portofolio/Musics/covers/06 - Anything for you.jpg",
+      "artwork": "/cms/06_Anything_for_you_0e996f0e60.jpg",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_06_Anything_for_you_0e996f0e60.jpg",
+        "small": "/cms/small_06_Anything_for_you_0e996f0e60.jpg",
+        "medium": "/cms/medium_06_Anything_for_you_0e996f0e60.jpg",
+        "large": "/cms/large_06_Anything_for_you_0e996f0e60.jpg"
+      },
       "tracks": [
         {
-          "id": "pulse-lab-1",
+          "id": "pulse-lab-track-1",
           "title": "Anything for You",
-          "src": "/Portofolio/Musics/06 - Anything for you.mp3",
+          "src": "/cms/06_Anything_for_you_0965e72875.mp3",
           "duration": 344
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "midnight-drive",
+      "title": "Midnight Drive",
+      "type": "music",
+      "year": 2025,
+      "skills": [
+        "Music production",
+        "Mixing/Mastering"
+      ],
+      "description": "Late-night driving music. Slow-tempo beats, reverb-drenched chords, and field recordings from Brussels at 3am.",
+      "artwork": "/cms/08_Minimalist_ad83a0949b.jpg",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_08_Minimalist_ad83a0949b.jpg",
+        "small": "/cms/small_08_Minimalist_ad83a0949b.jpg",
+        "medium": "/cms/medium_08_Minimalist_ad83a0949b.jpg",
+        "large": "/cms/large_08_Minimalist_ad83a0949b.jpg"
+      },
+      "tracks": [
+        {
+          "id": "midnight-drive-track-1",
+          "title": "Minimalist",
+          "src": "/cms/08_Minimalist_4b1f6a52d1.mp3",
+          "duration": 291
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "fever-shiver",
+      "title": "Fever ShiverRRRR",
+      "type": "collab",
+      "year": 2025,
+      "skills": [
+        "Sound design",
+        "Music production"
+      ],
+      "description": "Landing piece — original score and sound design woven into the hero film.",
+      "artwork": "/cms/cover_8ce9e0d78d.jpeg",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_cover_8ce9e0d78d.jpeg",
+        "small": "/cms/small_cover_8ce9e0d78d.jpeg",
+        "medium": "/cms/medium_cover_8ce9e0d78d.jpeg",
+        "large": "/cms/large_cover_8ce9e0d78d.jpeg"
+      },
+      "video": {
+        "src": "/cms/landingvideo_a907826523.mp4",
+        "preview": "/cms/landingvideo_a907826523.mp4",
+        "format": "h",
+        "resolution": [
+          1280,
+          720
+        ]
+      },
+      "tracks": [
+        {
+          "id": "fever-shiver-track-1",
+          "title": "Fever Shiver — Hero Theme",
+          "src": "/cms/landingong_4cfec9b8cf.mp3"
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "secret-7",
+      "title": "Secret 7",
+      "type": "collab",
+      "year": 2024,
+      "skills": [
+        "Sound design",
+        "Music production"
+      ],
+      "description": "Sound design and original composition for the Secret 7 vinyl artwork exhibition. Seven tracks reimagined as seven soundscapes.",
+      "artwork": "/cms/cover_3723aa3d2c.png",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_cover_3723aa3d2c.png",
+        "small": "/cms/small_cover_3723aa3d2c.png",
+        "medium": "/cms/medium_cover_3723aa3d2c.png",
+        "large": "/cms/large_cover_3723aa3d2c.png"
+      },
+      "video": {
+        "src": "/cms/video_e6284a1ff3.mp4",
+        "preview": "/cms/video_e6284a1ff3.mp4",
+        "format": "v",
+        "resolution": [
+          810,
+          1080
+        ]
+      },
+      "tracks": [
+        {
+          "id": "secret-7-track-1",
+          "title": "Secret 7 — Main Theme",
+          "src": "/cms/music_1252073e26.mp3",
+          "duration": 120
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "enchanted-forest",
+      "title": "Enchanted Forest",
+      "type": "collab",
+      "year": 2024,
+      "skills": [
+        "Sound design",
+        "Music production"
+      ],
+      "description": "Immersive soundscape and original score for the Enchanted Forest projection mapping installation. Layers of organic textures and evolving harmonics.",
+      "artwork": "/cms/cover_0836f7da64.png",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_cover_0836f7da64.png",
+        "small": "/cms/small_cover_0836f7da64.png",
+        "medium": "/cms/medium_cover_0836f7da64.png",
+        "large": "/cms/large_cover_0836f7da64.png"
+      },
+      "video": {
+        "src": "/cms/video_7630126836.mp4",
+        "preview": "/cms/video_7630126836.mp4",
+        "format": "h",
+        "resolution": [
+          1280,
+          756
+        ]
+      },
+      "tracks": [
+        {
+          "id": "enchanted-forest-track-1",
+          "title": "Enchanted Forest — Ambiance",
+          "src": "/cms/music_e2d4d7d16a.mp3",
+          "duration": 180
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "plantin-museum",
+      "title": "Plantin Museum",
+      "type": "collab",
+      "year": 2024,
+      "skills": [
+        "Sound design",
+        "Sound engineering"
+      ],
+      "description": "Original audio identity for the Plantin-Moretus Museum — a sonic journey through five centuries of printing history.",
+      "artwork": "/cms/cover_c378853f19.png",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_cover_c378853f19.png",
+        "small": "/cms/small_cover_c378853f19.png",
+        "medium": "/cms/medium_cover_c378853f19.png",
+        "large": "/cms/large_cover_c378853f19.png"
+      },
+      "video": {
+        "src": "/cms/video_22b9e9fd14.mp4",
+        "preview": "/cms/video_22b9e9fd14.mp4",
+        "format": "h",
+        "resolution": [
+          480,
+          854
+        ]
+      },
+      "tracks": [
+        {
+          "id": "plantin-museum-track-1",
+          "title": "Plantin Museum — Audio Identity",
+          "src": "/cms/music_29bf93a319.mp3",
+          "duration": 210
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
+      "id": "luminara",
+      "title": "Luminara",
+      "type": "collab",
+      "year": 2024,
+      "skills": [
+        "Sound design"
+      ],
+      "description": "Atmospheric sound design for a light installation. Generative audio reacts to ambient light levels using custom Max/MSP patches.",
+      "artwork": "/cms/05_Christmas_Clouds_f4bd829fd7.jpg",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_05_Christmas_Clouds_f4bd829fd7.jpg",
+        "small": "/cms/small_05_Christmas_Clouds_f4bd829fd7.jpg",
+        "medium": "/cms/medium_05_Christmas_Clouds_f4bd829fd7.jpg",
+        "large": "/cms/large_05_Christmas_Clouds_f4bd829fd7.jpg"
+      },
+      "tracks": [
+        {
+          "id": "luminara-track-1",
+          "title": "Christmas Clouds",
+          "src": "/cms/05_Christmas_Clouds_208898fca2.mp3",
+          "duration": 60
         }
       ],
       "collaborators": [],
@@ -327,51 +398,28 @@
         "Mixing/Mastering"
       ],
       "description": "Live sound engineering and post-production mix for an outdoor festival stage. Recorded, mixed, and delivered within 24 hours.",
-      "artwork": "/Portofolio/Musics/covers/07 - Rain.jpg",
-      "video": {
-        "src": "",
-        "preview": "",
-        "format": "h",
-        "resolution": [
-          1920,
-          1080
-        ]
+      "artwork": "/cms/07_Rain_362cb39070.jpg",
+      "artworkFormats": {
+        "thumbnail": "/cms/thumbnail_07_Rain_362cb39070.jpg",
+        "small": "/cms/small_07_Rain_362cb39070.jpg",
+        "medium": "/cms/medium_07_Rain_362cb39070.jpg",
+        "large": "/cms/large_07_Rain_362cb39070.jpg"
       },
       "tracks": [
         {
-          "id": "forest-frequency-1",
+          "id": "forest-frequency-track-1",
           "title": "Rain",
-          "src": "/Portofolio/Musics/07 - Rain.mp3",
+          "src": "/cms/07_Rain_6c24605428.mp3",
           "duration": 3600
         }
       ],
       "collaborators": [
         {
-          "name": "Forest Festival"
+          "id": 6,
+          "name": "Forest Festival",
+          "url": ""
         }
       ],
-      "links": []
-    },
-    {
-      "id": "midnight-drive",
-      "title": "Midnight Drive",
-      "type": "music",
-      "year": 2025,
-      "skills": [
-        "Music production",
-        "Mixing/Mastering"
-      ],
-      "description": "Late-night driving music. Slow-tempo beats, reverb-drenched chords, and field recordings from Brussels at 3am.",
-      "artwork": "/Portofolio/Musics/covers/08 - Minimalist.jpg",
-      "tracks": [
-        {
-          "id": "midnight-drive-1",
-          "title": "Minimalist",
-          "src": "/Portofolio/Musics/08 - Minimalist.mp3",
-          "duration": 291
-        }
-      ],
-      "collaborators": [],
       "links": []
     }
   ]
