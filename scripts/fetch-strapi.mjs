@@ -45,6 +45,11 @@ function mapTrack(t, projectSlug, i) {
     };
 }
 
+function defaultResolution(format) {
+    if (format === 'v') return [9, 16];
+    return [16, 9];
+}
+
 function mapVideo(v) {
     if (!v) return undefined;
     const file = v.file || {};
@@ -52,7 +57,7 @@ function mapVideo(v) {
         src: abs(file.url),
         preview: abs(file.url),
         format: v.format,
-        resolution: v.resolution,
+        resolution: Array.isArray(v.resolution) && v.resolution.length === 2 ? v.resolution : defaultResolution(v.format),
     };
 }
 

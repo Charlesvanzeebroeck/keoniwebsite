@@ -160,6 +160,7 @@ export async function init(rootEl, ctx) {
         const rowEl = rootEl.querySelector('#projectRow');
         if (frameMediaEl && infoEl) mountPanel(frameMediaEl, infoEl);
         if (rowEl) mountGallery(rowEl, (project, opts) => selectProject(project, opts));
+
         introTl = buildIntroTimeline();
     };
 

@@ -131,14 +131,6 @@ function renderFrame(project, opts = {}) {
         frameMediaEl.appendChild(img);
     }
 
-    const blur = document.createElement('div');
-    blur.className = 'frame-blur';
-    blur.innerHTML = `
-        <div class="frame-blur-layer" style="backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);mask-image:linear-gradient(to right, black 0%, black 55%, transparent 85%);-webkit-mask-image:linear-gradient(to right, black 0%, black 55%, transparent 85%);"></div>
-        <div class="frame-blur-layer" style="backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);mask-image:linear-gradient(to right, black 0%, black 30%, transparent 65%);-webkit-mask-image:linear-gradient(to right, black 0%, black 30%, transparent 65%);"></div>
-        <div class="frame-blur-layer" style="backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);mask-image:linear-gradient(to right, black 0%, black 10%, transparent 40%);-webkit-mask-image:linear-gradient(to right, black 0%, black 10%, transparent 40%);"></div>
-        <div class="frame-blur-tint"></div>`;
-    frameMediaEl.appendChild(blur);
 }
 
 export function select(project, opts = {}) {

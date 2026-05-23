@@ -73,19 +73,17 @@ header {
 
 .logo {
   font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-weight: 200;
+  letter-spacing: 0em;
   color: var(--text);
 }
 
 nav ul {
   display: flex;
-  gap: 3rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  gap: 2rem;
+  font-size: 1rem;
+  font-weight: 200;
+  letter-spacing: 0em;
 }
 
 nav a {
@@ -142,13 +140,14 @@ nav a:hover {
   min-height: 100vh;
   background: var(--bg);
   padding: 4rem 0 0;
+  overflow: hidden;
 }
 
-/* Top: 2-col × 2-row grid (info+row left, video full-height right) */
+/* Top: info left, video right */
 .project-top {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr;
+  gap: 2.5rem;
   padding: 0 2.5rem;
   align-items: stretch;
   position: relative;
@@ -156,11 +155,11 @@ nav a:hover {
 }
 
 .project-info {
-  grid-column: 1;
-  grid-row: 1;
   display: flex;
+  justify-content: center;
   flex-direction: column;
   gap: 1rem;
+  margin-left: 10rem;
   padding: 1.75rem 0;
   background: var(--bg);
 }
@@ -169,8 +168,6 @@ nav a:hover {
 }
 
 .project-frame {
-  grid-column: 2;
-  grid-row: 1 / span 2;
   position: relative;
   display: flex;
   align-items: center;
@@ -199,47 +196,75 @@ nav a:hover {
   display: block;
 }
 
-/* Progressive blur stack on the LEFT edge of the video frame */
-.frame-blur {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 45%;
-  pointer-events: none;
-}
-.frame-blur-layer {
-  position: absolute;
-  inset: 0;
-}
-.frame-blur-tint {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    rgba(10, 10, 10, 0.65) 0%,
-    rgba(10, 10, 10, 0) 100%
-  );
-}
-
-/* Gallery row — confined to the left column, directly under info */
+/* Gallery row — full-width, sits below the info + video row */
 .project-row-wrapper {
-  grid-column: 1;
-  grid-row: 2;
-  margin-top: 3.5rem;
+  margin-top: 2.5rem;
+  padding: 0 2.5rem;
   width: 100%;
-  overflow: hidden;
   position: relative;
   z-index: 1;
 }
 
+.gallery-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.gallery-nav-btn {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text);
+  background: transparent;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+.gallery-nav-btn:hover {
+  background: var(--surface);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.gallery-nav-btn:focus-visible {
+  outline: 1px solid var(--line-strong);
+  outline-offset: 2px;
+}
+
+.gallery-nav-indicator {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  position: relative;
+}
+.gallery-nav-indicator::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 8px solid var(--accent);
+}
+
 .project-row {
   display: flex;
-  gap: 0.5rem;
-  padding: 0 0 2.5rem;
+  gap: 1.5rem;
+  padding: 2rem 0 3rem;
   overflow-x: scroll;
   scrollbar-width: none;
   cursor: grab;
+  align-items: center;
 }
 .project-row::-webkit-scrollbar {
   display: none;
@@ -248,16 +273,52 @@ nav a:hover {
   cursor: grabbing;
 }
 
+/* CD-styled disc — round with a small concentric hole. */
 .project-disc {
+  --d: 1;
+  --rot: 0deg;
   flex-shrink: 0;
-  width: 160px;
-  height: 160px;
-  overflow: hidden;
+  width: clamp(130px, 13vw, 180px);
+  aspect-ratio: 1 / 1;
+  height: auto;
   position: relative;
   cursor: pointer;
-  transition: transform 0.25s ease;
-  border: 1px solid var(--line);
+  margin-right: -2rem;
+  /* Distance-based depth-of-field + baseline slant. */
+  opacity: calc(1 - var(--d) * 0.22);
+  filter: saturate(calc(1 - var(--d) * 0.15));
+  transition:
+    opacity 0.25s ease,
+    filter 0.25s ease,
+    transform 0.4s ease;
+}
+
+.project-disc:last-child {
+  margin-right: 0;
+}
+
+/* Inner wrapper owns the visible CD geometry so the tilt rotates the
+   whole disc (mask hole + ring + image) as one unit. */
+.project-disc .disc-tilt-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
   background: #111;
+  mask-image: radial-gradient(
+    circle at center,
+    transparent 0 9%,
+    black 9.5% 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    transparent 0 9%,
+    black 9.5% 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 6px 16px rgba(0, 0, 0, 0.45);
 }
 
 .project-disc img {
@@ -265,25 +326,38 @@ nav a:hover {
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 50%;
   pointer-events: none;
   user-select: none;
 }
 
-.project-disc:hover {
-  transform: scale(1.03);
+.project-disc.is-focus {
+  opacity: 1;
+  filter: saturate(1);
+  z-index: 2;
 }
 
-.project-disc.active {
-  border: 2px solid var(--line-strong);
+.project-disc.active .disc-tilt-inner {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.15),
-    0 8px 24px -8px rgba(255, 255, 255, 0.25);
+    inset 0 0 0 2px var(--accent),
+    inset 0 0 18px rgba(0, 0, 0, 0.35),
+    0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.project-disc:focus-visible {
+  outline: none;
+}
+.project-disc:focus-visible .disc-tilt-inner {
+  box-shadow:
+    inset 0 0 0 2px var(--line-strong),
+    inset 0 0 18px rgba(0, 0, 0, 0.35);
 }
 
 .disc-playing-badge {
   position: absolute;
-  top: 0.4rem;
-  left: 0.4rem;
+  bottom: 0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: flex-end;
   gap: 2px;
@@ -328,8 +402,9 @@ nav a:hover {
 
 .disc-year-badge {
   position: absolute;
-  bottom: 0.4rem;
-  right: 0.4rem;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 0.18rem 0.45rem;
   font-size: 0.62rem;
   font-weight: 600;
@@ -429,6 +504,7 @@ nav a:hover {
 
 .pi-track-row {
   display: flex;
+  align-items: center;
   gap: 1rem;
   padding: 0.55rem 0.4rem;
   cursor: pointer;
@@ -458,7 +534,6 @@ nav a:hover {
 }
 
 .pi-track-play {
-  position: absolute;
   left: 0.4rem;
   width: 24px;
   display: flex;
@@ -488,7 +563,6 @@ nav a:hover {
 /* ── Footer ─────────────────────────────── */
 footer {
   background: var(--bg);
-  border-top: 1px solid var(--line);
 }
 
 .footer_container {
@@ -517,8 +591,7 @@ footer {
   gap: 2rem;
   font-size: 1.4rem;
   font-weight: 300;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .socials {

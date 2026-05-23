@@ -1,6 +1,36 @@
 {
   "projects": [
     {
+      "id": "fever-shiver",
+      "title": "Fever Shiver",
+      "type": "collab",
+      "year": 2025,
+      "skills": [
+        "Sound design",
+        "Music production"
+      ],
+      "description": "Landing piece — original score and sound design woven into the hero film.",
+      "artwork": "/Portofolio/Projects/FeverShiver/cover.jpeg",
+      "video": {
+        "src": "/Portofolio/landingvideo.mp4",
+        "preview": "/Portofolio/landingvideo.mp4",
+        "format": "h",
+        "resolution": [
+          1280,
+          720
+        ]
+      },
+      "tracks": [
+        {
+          "id": "fever-shiver-1",
+          "title": "Fever Shiver — Hero Theme",
+          "src": "/Portofolio/landingong.mp3"
+        }
+      ],
+      "collaborators": [],
+      "links": []
+    },
+    {
       "id": "secret-7",
       "title": "Secret 7",
       "type": "collab",
