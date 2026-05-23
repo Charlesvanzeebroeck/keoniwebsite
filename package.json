@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/fetch-strapi.mjs",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fetch:cms": "node scripts/fetch-strapi.mjs"
   },
   "devDependencies": {
     "vite": "^7.0.4"
