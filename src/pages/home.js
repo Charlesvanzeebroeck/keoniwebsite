@@ -16,11 +16,42 @@ let introTl = null;
 let heroPreloadAudio = null;
 let unsubHero = null;
 let deferredMountTimer = null;
+let tabsEl = null;
 
 const PLAY_ICON = `<svg viewBox="0 0 24 24" fill="none"><path d="M5 3L19 12L5 21V3Z" fill="#fff"/></svg>`;
 const PAUSE_ICON = `<svg viewBox="0 0 24 24" fill="none"><rect x="6" y="4" width="4" height="16" fill="#fff"/><rect x="14" y="4" width="4" height="16" fill="#fff"/></svg>`;
 
 export async function init(rootEl, ctx) {
+    // ── Mobile tab bar: gallery → [Details | Media] → content ──
+    const projectSection = rootEl.querySelector('.project-section');
+    const rowWrapper = rootEl.querySelector('.project-row-wrapper');
+    const projectInfoEl = rootEl.querySelector('#projectInfo');
+    const projectFrameEl = rootEl.querySelector('#projectFrame');
+
+    tabsEl = document.createElement('div');
+    tabsEl.className = 'mobile-tabs';
+    tabsEl.innerHTML = `
+        <button class="mobile-tab-btn active" data-tab="details">Details</button>
+        <button class="mobile-tab-btn" data-tab="media">Media</button>`;
+
+    if (projectSection && rowWrapper) {
+        rowWrapper.insertAdjacentElement('afterend', tabsEl);
+    }
+
+    // Initial state: details visible, media hidden (CSS only affects mobile)
+    projectFrameEl?.classList.add('tab-hidden');
+
+    tabsEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-tab]');
+        if (!btn) return;
+        const tab = btn.dataset.tab;
+        tabsEl.querySelectorAll('.mobile-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        projectInfoEl?.classList.toggle('tab-hidden', tab !== 'details');
+        projectFrameEl?.classList.toggle('tab-hidden', tab !== 'media');
+    });
+    // ──────────────────────────────────────────────────────────
+
     const video = rootEl.querySelector('#player');
     if (!video) return;
     videoRef = video;
@@ -176,6 +207,7 @@ export async function init(rootEl, ctx) {
 export async function destroy() {
     if (deferredMountTimer) { clearTimeout(deferredMountTimer); deferredMountTimer = null; }
     if (introTl) { introTl.kill(); introTl = null; }
+    tabsEl = null;
     ScrollTrigger.getAll().forEach(t => t.kill());
     destroyPanel();
     destroyGallery();

@@ -13,7 +13,7 @@
   z-index: 200;
   overflow: hidden;
   color: #f2f2f2;
-  font-family: "DM Sans", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* Idle */
@@ -148,7 +148,7 @@
 }
 .npb-shuffle-btn svg, .npb-mute-btn svg, .npb-playpause-side svg { width: 16px; height: 16px; }
 .npb-shuffle-btn:hover, .npb-mute-btn:hover, .npb-playpause-side:hover { color: #f2f2f2; }
-.npb-shuffle-btn.active { color: #e65b39; }
+.npb-shuffle-btn.active { color: #9d8df5; }
 .npb-playpause-side { color: rgba(255,255,255,0.85); }
 .npb-playpause-side svg { width: 18px; height: 18px; }
 

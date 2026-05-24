@@ -29,12 +29,12 @@ a {
   --line-strong: rgba(255, 255, 255, 0.85);
   --text: #f2f2f2;
   --muted: #888;
-  --accent: #e65b39;
+  --accent: #9d8df5;
 }
 
 /* ── Base ─────────────────────────────── */
 body {
-  font-family: "DM Sans", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-size: 1rem;
   background: var(--bg);
@@ -134,6 +134,16 @@ nav a:hover {
 }
 
 /* ── Project Section ─────────────────────────────── */
+.project-section-label {
+  padding: 0 2.5rem;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--text);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
 .project-section {
   display: flex;
   flex-direction: column;
@@ -155,12 +165,15 @@ nav a:hover {
 }
 
 .project-info {
+  border: solid 0.4px var(--line);
   display: flex;
+  height: fit-content;
   justify-content: center;
   flex-direction: column;
   gap: 1rem;
   margin-left: 10rem;
-  padding: 1.75rem 0;
+  margin-top: 10rem;
+  padding: 1.75rem 2rem;
   background: var(--bg);
 }
 .project-info > * {
@@ -199,7 +212,6 @@ nav a:hover {
 /* Gallery row — full-width, sits below the info + video row */
 .project-row-wrapper {
   margin-top: 2.5rem;
-  padding: 0 2.5rem;
   width: 100%;
   position: relative;
   z-index: 1;
@@ -209,6 +221,7 @@ nav a:hover {
   display: flex;
   align-items: center;
   gap: 1rem;
+  padding: 0 2.5rem;
   margin-top: 0.5rem;
 }
 
@@ -236,6 +249,31 @@ nav a:hover {
 .gallery-nav-btn:focus-visible {
   outline: 1px solid var(--line-strong);
   outline-offset: 2px;
+}
+
+.gallery-hint {
+  margin-left: 2rem;
+  font-size: 0.85rem;
+  font-weight: 100;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  white-space: nowrap;
+  text-transform: underline;
+  text-underline-offset: 5px;
+  flex-shrink: 0;
+}
+
+.gallery-hint-touch {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .gallery-hint-touch {
+    display: inline;
+  }
+  .gallery-hint-mouse {
+    display: none;
+  }
 }
 
 .gallery-nav-indicator {
@@ -523,6 +561,8 @@ nav a:hover {
 }
 
 .pi-track-num {
+  flex-shrink: 0;
+  width: 1.5rem;
   font-size: 0.7rem;
   color: var(--muted);
   text-align: center;
@@ -534,8 +574,11 @@ nav a:hover {
 }
 
 .pi-track-play {
+  position: absolute;
   left: 0.4rem;
-  width: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -552,9 +595,12 @@ nav a:hover {
 }
 
 .pi-track-title {
+  flex: 1;
   font-size: 0.88rem;
 }
 .pi-track-dur {
+  flex-shrink: 0;
+  margin-left: auto;
   font-size: 0.72rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
@@ -620,4 +666,99 @@ footer {
 }
 .credits a:hover {
   color: var(--text);
+}
+
+/* ── Mobile tab bar (gallery → tabs → content) ─────────── */
+.mobile-tabs {
+  display: none;
+}
+
+.mobile-tab-btn {
+  flex: 1;
+  padding: 0.75rem 0;
+  text-align: center;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition:
+    color 0.18s,
+    border-color 0.18s;
+}
+
+.mobile-tab-btn.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+@media (max-width: 767px) {
+  .hero {
+    height: 65vh;
+  }
+
+  .project-section-label {
+    padding: 0 1.25rem;
+  }
+
+  .project-section {
+    padding-top: 1.5rem;
+  }
+
+  /* Reorder children: gallery → tabs → info+frame */
+  .project-row-wrapper {
+    order: 1;
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .mobile-tabs {
+    order: 2;
+    display: flex;
+    margin: 0.5rem 0 0;
+    padding: 0 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .project-top {
+    order: 3;
+    display: block;
+    padding: 0 1.25rem;
+  }
+
+  .project-info {
+    margin-left: 0;
+    padding: 1.5rem 0;
+  }
+
+  .project-frame {
+    height: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-frame-media {
+    width: 100%;
+    height: auto;
+  }
+
+  /* tab-hidden only takes effect on mobile */
+  .tab-hidden {
+    display: none !important;
+  }
+  .project-info {
+    border: solid 0.4px var(--line);
+    display: flex;
+    height: fit-content;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 1.75rem 2rem;
+    background: var(--bg);
+  }
 }

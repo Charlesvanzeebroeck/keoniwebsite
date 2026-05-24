@@ -4,7 +4,8 @@
     </video>
 </div>
 
-<div class="project-section">
+<div class="project-section" id="projects">
+    <div class="project-section-label">Projects</div>
     <div class="project-top">
         <div class="project-info" id="projectInfo"></div>
         <div class="project-frame" id="projectFrame">
@@ -12,14 +13,25 @@
         </div>
     </div>
     <div class="project-row-wrapper">
+        <span class="gallery-hint" aria-hidden="true">
+            <span class="gallery-hint-touch">Swipe to select</span>
+            <span class="gallery-hint-mouse">Scroll to select</span>
+        </span>
         <div class="project-row" id="projectRow"></div>
+
         <div class="gallery-nav">
             <button type="button" class="gallery-nav-btn" id="galleryPrev" aria-label="Previous project">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 6 9 12 15 18"/></svg>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 6 9 12 15 18" />
+                </svg>
             </button>
             <div class="gallery-nav-indicator" aria-hidden="true"></div>
             <button type="button" class="gallery-nav-btn" id="galleryNext" aria-label="Next project">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 6 15 12 9 18" />
+                </svg>
             </button>
         </div>
     </div>
