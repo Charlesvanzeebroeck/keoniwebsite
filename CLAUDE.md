@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Portfolio site for "keoni" — a vanilla-JS SPA built with Vite. Deployed on vercel (Hostinger DNS). No framework; uses GSAP for animation and native HTML5 `<video>` for video playback.
 
+## Video is visual, not interactive
+
+Videos on this site are **visual support for the music**, never the primary content. They always render as `<video playsinline preload="metadata" muted autoplay loop>` with **no `controls` attribute** — the user is meant to hear the track and see the imagery, not scrub or pause the video. Do not add Plyr, custom video controls, or any control UI back. If you ever need user-facing playback controls, that signals a product-direction change — confirm with the user before adding.
+
 ## Commands
 
 - `npm run dev` — start Vite dev server
