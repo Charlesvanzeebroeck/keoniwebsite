@@ -11,10 +11,10 @@
     "fetch:cms": "node scripts/fetch-strapi.mjs"
   },
   "devDependencies": {
+    "ffprobe-static": "^3.1.0",
     "vite": "^7.0.4"
   },
   "dependencies": {
-    "gsap": "^3.13.0",
-    "plyr": "^3.8.3"
+    "gsap": "^3.13.0"
   }
 }

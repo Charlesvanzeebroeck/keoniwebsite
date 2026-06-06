@@ -119,10 +119,6 @@ span {
     aspect-ratio: 9 / 16;
 }
 
-.format-v .custom-plyr-controls {
-    width: 60%;
-}
-
 .format-v .parent-container {
     align-items: center;
     margin-left: 10rem;
@@ -153,70 +149,6 @@ span {
     object-fit: contain;
 }
 
-
-/* Remove controls from video container */
-.project-video-container .plyr__controls {
-    display: none !important;
-}
-
-/* Style controls in custom container */
-.custom-plyr-controls .plyr__controls {
-    position: relative !important;
-    padding: 0 !important;
-    background: none !important;
-    color: #1B1D1D !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    text-align: left !important;
-    margin-top: 1rem !important;
-}
-
-/* Custom Plyr controls styling */
-.custom-plyr-controls {
-    width: 100%;
-    padding: 1rem 0;
-    background: transparent;
-}
-
-/* Override Plyr's default control positioning */
-.plyr--video .plyr__controls {
-    position: relative !important;
-    padding: 0 !important;
-    background: none !important;
-    color: #1B1D1D !important;
-}
-
-/* Style the progress bar */
-.plyr--full-ui input[type=range] {
-    color: #1B1D1D !important;
-}
-
-/* Style the play button and other controls */
-.plyr__control {
-    color: #1B1D1D !important;
-}
-
-.plyr__control--overlaid {
-    display: none !important;
-}
-
-.plyr__progress__buffer {
-    display: none !important;
-}
-
-/* Remove default video hover controls */
-.plyr--video:hover .plyr__controls {
-    opacity: 1 !important;
-}
-
-.plyr__tooltip {
-    display: none !important;
-}
-
-.plyr__progress {
-    transform: translateY(-5px);
-}
 
 input[type='range'] {
     -webkit-appearance: none;
@@ -317,13 +249,6 @@ input[type='range'] {
         margin-top: 0;
     }
 
-    /* Adjust custom controls for mobile */
-    .custom-plyr-controls,
-    .format-v .custom-plyr-controls {
-        width: 100%;
-        padding: 1rem 0;
-    }
-
     /* Adjust skills section width for mobile */
     .project-skills-section,
     .format-v .project-skills-section {
@@ -344,3 +269,51 @@ input[type='range'] {
 
 
 }
+/* Video switcher (multiple videos per project) */
+.project-video-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.project-video-switcher:empty { display: none; }
+.video-switcher-btn {
+    background: transparent;
+    color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+.video-switcher-btn:hover { border-color: rgba(255, 255, 255, 0.6); }
+.video-switcher-btn.active {
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+    border-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Track list with track→video links */
+.project-tracklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 1.25rem;
+}
+.project-tracklist:empty { display: none; }
+.pd-track-row {
+    display: grid;
+    grid-template-columns: 2rem 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.pd-track-row:hover:not(.no-src) { background: rgba(255, 255, 255, 0.06); }
+.pd-track-row.no-src { opacity: 0.5; cursor: default; }
+.pd-track-row.linked-active { background: rgba(255, 255, 255, 0.08); }
+.pd-track-num { opacity: 0.6; font-variant-numeric: tabular-nums; }
+.pd-track-linked { font-size: 0.75rem; opacity: 0.65; }

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Portfolio site for "Tate Edits" — a vanilla-JS SPA built with Vite. Deployed on Netlify (Hostinger DNS). No framework; uses GSAP for animation and Plyr for video.
+Portfolio site for "keoni" — a vanilla-JS SPA built with Vite. Deployed on vercel (Hostinger DNS). No framework; uses GSAP for animation and native HTML5 `<video>` for video playback.
 
 ## Commands
 
@@ -40,11 +40,14 @@ Each page in `src/pages/` is split into a logic file (`home.js`) and an animatio
 
 `public/sw.js` is registered once from `src/main.js` (only on HTTPS or localhost). When changing caching behavior, bump the cache version inside `sw.js` — the SPA router caches view fragments in-memory separately.
 
-## Netlify configuration
+## Vercel configuration
 
-- `public/_redirects`: `/* /index.html 200` — required for the SPA router to work on deep links.
-- `public/_headers`: sets HSTS, CSP, Permissions-Policy, and long-lived immutable cache for `/videos/*`, `/thumbnails/*`, CSS, and JS. `/projects.json` is given a short 60s cache so content updates show up quickly.
-- **CSP is strict**: no `unsafe-inline` or `unsafe-eval` in `script-src`. Do not introduce inline `<script>` or `eval`/`new Function` (GSAP works without eval). Allowed external origins are limited to Google Fonts (CSS + fonts) and `cdn.plyr.io` (img/media/connect). Adding any new third-party asset means updating the CSP in `_headers`.
+Deployed on Vercel — all hosting config lives in `vercel.json` at the project root. The old Netlify files (`public/_redirects`, `public/_headers`) are not read by Vercel and should be considered stale; edit `vercel.json` instead.
+
+- **SPA fallback**: the `rewrites` rule `{ "source": "/((?!.*\\.).*)", "destination": "/index.html" }` sends every non-asset path to `index.html` so the SPA router can handle deep links.
+- **Headers** (`vercel.json` → `headers`): HSTS, CSP, Permissions-Policy, and long-lived immutable cache for `/videos`, `/audio`, `/artwork`, `/thumbnails`, `/cms`, plus `*.css` / `*.js`. `/projects.json` gets a short 60s cache so CMS rebuilds show up quickly.
+- **CSP is strict**: no `unsafe-inline` or `unsafe-eval` in `script-src`. Do not introduce inline `<script>` or `eval`/`new Function` (GSAP works without eval). Adding any new third-party origin means updating the CSP value in `vercel.json`.
+- **Build settings**: `buildCommand: npm run build`, `outputDirectory: dist`, `framework: vite`. `npm run build` runs the `prebuild` Strapi fetch first — see the root `CLAUDE.md` for the content pipeline and required `STRAPI_URL` / `STRAPI_TOKEN` env vars on Vercel.
 - See `SECURITY_ISSUES.md` for the rationale behind the headers and the Permissions-Policy allowlist (autoplay/fullscreen/picture-in-picture restricted to `self`).
 
 ## Conventions

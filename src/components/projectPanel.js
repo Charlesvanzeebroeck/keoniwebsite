@@ -5,6 +5,12 @@ let frameMediaEl = null;
 let infoEl = null;
 let unsubPlayer = null;
 let currentProject = null;
+let currentVideo = null;
+
+function videoForTrack(project, trackCmsId) {
+    if (!project || trackCmsId == null) return null;
+    return (project.videos || []).find(v => v.trackId === trackCmsId) || null;
+}
 
 function formatTime(s) {
     if (!s || isNaN(s)) return '';
@@ -66,7 +72,14 @@ function renderInfo(project) {
 
     infoEl.querySelectorAll('.pi-track-row:not(.no-src)').forEach(row => {
         const idx = parseInt(row.dataset.trackIndex, 10);
-        const handler = () => player.playTrack(tracksWithMeta[idx], tracksWithMeta);
+        const handler = () => {
+            const track = tracksWithMeta[idx];
+            player.playTrack(track, tracksWithMeta);
+            const linked = videoForTrack(project, track.cmsId);
+            if (linked && linked.src && linked !== currentVideo) {
+                renderFrame(project, { silent: false, video: linked });
+            }
+        };
         row.addEventListener('click', handler);
         row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') handler(); });
     });
@@ -97,15 +110,17 @@ function sizeMediaWrapper(res) {
 
 function renderFrame(project, opts = {}) {
     if (!frameMediaEl) return;
-    const { silent = false } = opts;
+    const { silent = false, video: overrideVideo = null } = opts;
 
-    const hasVideo = project.type === 'collab' && project.video?.src;
-    const src = hasVideo ? project.video.src : project.artwork;
+    const video = overrideVideo || project.video || (project.videos && project.videos[0]) || null;
+    currentVideo = video;
+    const hasVideo = project.type === 'collab' && video?.src;
+    const src = hasVideo ? video.src : project.artwork;
     const encodedSrc = encodeURI(src);
 
     frameMediaEl.innerHTML = '';
 
-    const res = project.video?.resolution;
+    const res = video?.resolution;
     sizeMediaWrapper(res);
 
     const fmt = project.artworkFormats || {};
@@ -177,7 +192,7 @@ export function select(project, opts = {}) {
 }
 
 function onResize() {
-    if (currentProject) sizeMediaWrapper(currentProject.video?.resolution);
+    if (currentProject) sizeMediaWrapper(currentVideo?.resolution || currentProject.video?.resolution);
 }
 
 export function mount(framEl, infEl) {
@@ -190,4 +205,5 @@ export function destroy() {
     if (unsubPlayer) { unsubPlayer(); unsubPlayer = null; }
     window.removeEventListener('resize', onResize);
     currentProject = null;
+    currentVideo = null;
 }

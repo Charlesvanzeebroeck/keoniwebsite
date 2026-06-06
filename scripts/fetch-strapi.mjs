@@ -6,6 +6,11 @@ import { fileURLToPath } from 'node:url';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { createWriteStream } from 'node:fs';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import ffprobeStatic from 'ffprobe-static';
+
+const execFileAsync = promisify(execFile);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -84,19 +89,40 @@ async function localizeFormats(formats) {
     return out;
 }
 
-async function mapTrack(t, projectSlug, i) {
-    const file = t.file || {};
-    return {
-        id: `${projectSlug}-track-${i + 1}`,
-        title: t.title,
-        src: await localize(file.url),
-        ...(t.duration != null ? { duration: t.duration } : {}),
-    };
+function gcd(a, b) {
+    a = Math.abs(a); b = Math.abs(b);
+    while (b) { [a, b] = [b, a % b]; }
+    return a || 1;
 }
 
-function defaultResolution(format) {
-    if (format === 'v') return [9, 16];
-    return [16, 9];
+function aspectRatio(width, height) {
+    const g = gcd(width, height);
+    return [width / g, height / g];
+}
+
+const probeCache = new Map();
+async function probeDimensions(localPath) {
+    if (probeCache.has(localPath)) return probeCache.get(localPath);
+    const p = (async () => {
+        try {
+            const { stdout } = await execFileAsync(ffprobeStatic.path, [
+                '-v', 'error',
+                '-select_streams', 'v:0',
+                '-show_entries', 'stream=width,height',
+                '-of', 'json',
+                localPath,
+            ]);
+            const parsed = JSON.parse(stdout);
+            const s = parsed.streams && parsed.streams[0];
+            if (!s || !s.width || !s.height) return null;
+            return { width: s.width, height: s.height };
+        } catch (err) {
+            console.warn(`  ⚠ ffprobe failed for ${basename(localPath)}: ${err.message}`);
+            return null;
+        }
+    })();
+    probeCache.set(localPath, p);
+    return p;
 }
 
 function extractFormats(media) {
@@ -109,26 +135,82 @@ function extractFormats(media) {
     return Object.keys(out).length ? out : undefined;
 }
 
-async function mapVideo(v) {
+const byOrderThenId = (a, b) => {
+    const ao = a.order ?? Number.MAX_SAFE_INTEGER;
+    const bo = b.order ?? Number.MAX_SAFE_INTEGER;
+    if (ao !== bo) return ao - bo;
+    return (a.id ?? 0) - (b.id ?? 0);
+};
+
+async function mapTrack(t, projectSlug, i) {
+    const file = t.file || {};
+    return {
+        id: `${projectSlug}-track-${t.id ?? i + 1}`,
+        cmsId: t.id ?? null,
+        title: t.title,
+        src: await localize(file.url),
+        ...(t.duration != null ? { duration: t.duration } : {}),
+    };
+}
+
+async function mapVideo(v, projectSlug, i) {
     if (!v) return undefined;
     const file = v.file || {};
     const src = await localize(file.url);
+
+    // Derive format + aspect ratio from the localized file. Falls back to a
+    // landscape 16:9 default if probing fails (missing binary, unknown codec).
+    let format = 'h';
+    let resolution = [16, 9];
+    if (src && src.startsWith(MEDIA_PREFIX + '/')) {
+        const localPath = resolve(MEDIA_DIR, basename(src));
+        const dims = await probeDimensions(localPath);
+        if (dims) {
+            format = dims.height > dims.width ? 'v' : 'h';
+            resolution = aspectRatio(dims.width, dims.height);
+        }
+    }
+
+    const id = `${projectSlug}-video-${v.id ?? i + 1}`;
     return {
+        id,
+        cmsId: v.id ?? null,
+        title: v.title || null,
         src,
+        videoUrl: src,
         preview: src,
-        format: v.format,
-        resolution: Array.isArray(v.resolution) && v.resolution.length === 2 ? v.resolution : defaultResolution(v.format),
+        format,
+        resolution,
+        trackId: v.track?.id ?? null,
     };
 }
 
 async function mapProject(entry) {
     const slug = entry.slug || entry.documentId;
-    const [artwork, artworkFormats, video, tracks] = await Promise.all([
+
+    const rawTracks = Array.isArray(entry.tracks) ? [...entry.tracks].sort(byOrderThenId) : [];
+    const rawVideos = Array.isArray(entry.videos) ? [...entry.videos].sort(byOrderThenId) : [];
+
+    const [artwork, artworkFormats, tracks, videos] = await Promise.all([
         localize(entry.artwork?.url),
         localizeFormats(extractFormats(entry.artwork)),
-        mapVideo(entry.video),
-        Promise.all((entry.tracks || []).map((t, i) => mapTrack(t, slug, i))),
+        Promise.all(rawTracks.map((t, i) => mapTrack(t, slug, i))),
+        Promise.all(rawVideos.map((v, i) => mapVideo(v, slug, i))),
     ]);
+
+    // Attach linked video ids onto each track for easy lookup on the website.
+    const videosByTrackCmsId = new Map();
+    for (const v of videos) {
+        if (v.trackId == null) continue;
+        const arr = videosByTrackCmsId.get(v.trackId) || [];
+        arr.push(v.id);
+        videosByTrackCmsId.set(v.trackId, arr);
+    }
+    for (const t of tracks) {
+        const linked = (t.cmsId != null && videosByTrackCmsId.get(t.cmsId)) || [];
+        if (linked.length) t.videoIds = linked;
+    }
+
     return {
         id: slug,
         title: entry.title,
@@ -138,7 +220,10 @@ async function mapProject(entry) {
         description: entry.description || '',
         artwork,
         artworkFormats,
-        video,
+        // Back-compat: projectPanel.js still reads `project.video.src`/`.resolution`.
+        // Surface the first video (preferring an unlinked one) as the project hero.
+        video: videos.find(v => v.trackId == null) || videos[0],
+        videos,
         tracks,
         collaborators: entry.collaborators || [],
         links: entry.links || [],
@@ -147,8 +232,9 @@ async function mapProject(entry) {
 
 const query =
     'populate[artwork]=true' +
-    '&populate[video][populate]=*' +
-    '&populate[tracks][populate]=*' +
+    '&populate[tracks][populate]=file' +
+    '&populate[videos][populate][file]=true' +
+    '&populate[videos][populate][track]=true' +
     '&populate[collaborators]=*' +
     '&populate[links]=*' +
     '&pagination[pageSize]=100' +

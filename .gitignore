@@ -15,6 +15,9 @@ dist-ssr
 .env.*
 !.env.example
 
+# CMS media — downloaded from Strapi at build time
+public/cms/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

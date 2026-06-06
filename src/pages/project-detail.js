@@ -1,5 +1,3 @@
-import Plyr from 'plyr';
-import 'plyr/dist/plyr.css';
 import { buildProjectDetailIntroTimeline } from './project-detail.gsap.js';
 
 // Get project ID from URL parameters
@@ -9,6 +7,64 @@ function getProjectIdFromSearch(search) {
 }
 
 import { loadProjects } from '../data.js';
+import * as player from '../audioPlayer.js';
+
+function selectVideo(index) {
+    if (!currentProject) return;
+    if (index === currentVideoIndex) return;
+    updateProjectDetail(currentProject, index);
+    tryAutoplay();
+}
+
+function renderVideoSwitcher(project, activeIndex) {
+    const container = document.querySelector('.project-video-switcher');
+    if (!container) return;
+    const videos = project.videos || [];
+    if (videos.length <= 1) { container.innerHTML = ''; return; }
+    container.innerHTML = videos.map((v, i) => `
+        <button class="video-switcher-btn${i === activeIndex ? ' active' : ''}" data-video-index="${i}">
+            ${v.title || `Video ${i + 1}`}
+        </button>
+    `).join('');
+    container.querySelectorAll('[data-video-index]').forEach(btn => {
+        btn.addEventListener('click', () => selectVideo(parseInt(btn.dataset.videoIndex, 10)));
+    });
+}
+
+function renderTrackList(project, activeVideo) {
+    const container = document.querySelector('.project-tracklist');
+    if (!container) return;
+    const tracks = project.tracks || [];
+    if (!tracks.length) { container.innerHTML = ''; return; }
+    const tracksWithMeta = tracks.map(t => ({ ...t, _project: project }));
+    container.innerHTML = tracks.map((t, i) => {
+        const linkedCount = (t.videoIds || []).length;
+        const isActiveForVideo = activeVideo && t.cmsId != null && activeVideo.trackId === t.cmsId;
+        return `
+            <div class="pd-track-row${t.src ? '' : ' no-src'}${isActiveForVideo ? ' linked-active' : ''}"
+                 data-track-index="${i}" role="${t.src ? 'button' : 'presentation'}" tabindex="${t.src ? '0' : '-1'}">
+                <span class="pd-track-num">${i + 1}</span>
+                <span class="pd-track-title">${t.title}</span>
+                ${linkedCount ? `<span class="pd-track-linked">${linkedCount} video${linkedCount > 1 ? 's' : ''}</span>` : ''}
+            </div>
+        `;
+    }).join('');
+    container.querySelectorAll('.pd-track-row:not(.no-src)').forEach(row => {
+        const idx = parseInt(row.dataset.trackIndex, 10);
+        const handler = () => {
+            const track = tracksWithMeta[idx];
+            if (track.src) player.playTrack(track, tracksWithMeta);
+            // If this track has linked videos, jump to the first one
+            const firstLinkedId = (track.videoIds || [])[0];
+            if (firstLinkedId) {
+                const linkedIdx = (currentProject.videos || []).findIndex(v => v.id === firstLinkedId);
+                if (linkedIdx >= 0) selectVideo(linkedIdx);
+            }
+        };
+        row.addEventListener('click', handler);
+        row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') handler(); });
+    });
+}
 
 // Load projects data (using centralized loader)
 // loadProjects is imported from ../data.js
@@ -16,7 +72,6 @@ import { loadProjects } from '../data.js';
 // Global variables for current project and video state
 let currentProject = null;
 let currentVideoIndex = 0;
-let currentPlayer = null;
 
 // Store event listener references for proper cleanup
 let userInteractionHandlers = {
@@ -25,30 +80,23 @@ let userInteractionHandlers = {
     keydown: null
 };
 
+function tryAutoplay() {
+    const video = document.getElementById('projectVideo');
+    if (!video) return;
+    video.muted = true;
+    const p = video.play();
+    if (p) p.catch(() => {});
+}
+
 // Ensure current video fully unloads to stop network activity
 function teardownCurrentVideo() {
     try {
-        if (currentPlayer) {
-            try { currentPlayer.pause(); } catch (_) { }
-            try { currentPlayer.destroy(); } catch (_) { }
-            currentPlayer = null;
-        }
-
         const existingVideo = document.getElementById('projectVideo');
         if (existingVideo) {
             try { existingVideo.pause(); } catch (_) { }
-            // Remove sources to abort any ongoing download
             existingVideo.removeAttribute('src');
-            const sources = existingVideo.querySelectorAll('source');
-            sources.forEach(src => src.remove());
-            // Calling load() after removing src ensures network is aborted
+            existingVideo.querySelectorAll('source').forEach(src => src.remove());
             try { existingVideo.load(); } catch (_) { }
-        }
-
-        // Clear any previously moved controls
-        const customControlsContainer = document.querySelector('.custom-plyr-controls');
-        if (customControlsContainer) {
-            customControlsContainer.innerHTML = '';
         }
     } catch (_) {
         // no-op
@@ -63,41 +111,37 @@ function updateProjectDetail(project, videoIndex = 0) {
     }
 
     const video = project.videos[videoIndex];
-    console.log('updateProjectDetail called with videoIndex:', videoIndex, 'video:', video);
     if (!video) {
         handleProjectNotFound();
         return;
     }
+    currentVideoIndex = videoIndex;
 
     // Update page title
-    document.title = `${video.title} - ${project.title} - Tate Edits`;
+    document.title = `${video.title || project.title} - ${project.title} - Tate Edits`;
 
-    // Apply format-based CSS class to the entire container
+    // Apply format-based CSS class (format is per-video now)
     const projectContainer = document.querySelector('.project-detail-container');
-    projectContainer.className = `project-detail-container format-${project.format}`;
+    projectContainer.className = `project-detail-container format-${video.format || 'h'}`;
 
-    // Teardown the player FIRST before updating video element
-    if (currentPlayer) {
-        try { currentPlayer.pause(); } catch (_) { }
-        try { currentPlayer.destroy(); } catch (_) { }
-        currentPlayer = null;
-    }
-
-    // Clear any previously moved controls
-    const customControlsContainer = document.querySelector('.custom-plyr-controls');
-    if (customControlsContainer) {
-        customControlsContainer.innerHTML = '';
-    }
+    // Teardown previous video before re-rendering
+    teardownCurrentVideo();
 
     // Always recreate the video element to ensure clean state
     const videoContainer = document.querySelector('.project-video-container');
-    console.log('Creating new video element for', video.videoUrl);
+    const videoSrc = video.videoUrl || video.src;
+    if (video.resolution && video.resolution.length === 2) {
+        videoContainer.style.aspectRatio = `${video.resolution[0]} / ${video.resolution[1]}`;
+    }
     videoContainer.innerHTML = `
-        <video id="projectVideo" playsinline controls preload="metadata" muted>
-            <source src="${video.videoUrl}" type="video/mp4">
+        <video id="projectVideo" playsinline controls preload="metadata" muted autoplay>
+            <source src="${videoSrc}" type="video/mp4">
             Your browser doesn't support HTML5 video.
         </video>
     `;
+
+    renderVideoSwitcher(project, videoIndex);
+    renderTrackList(project, video);
 
     // Update project information
     document.getElementById('projectTitle').textContent = project.title;
@@ -123,59 +167,6 @@ function updateProjectDetail(project, videoIndex = 0) {
         collaboratorsContainer.innerHTML = '<p class="no-collaborators">No collaborators</p>';
     }
 
-}
-
-// Initialize Plyr video player
-function initializeVideoPlayer() {
-    const video = document.getElementById('projectVideo');
-    if (video && video.tagName === 'VIDEO') {
-        // Destroy existing player if it exists
-        if (currentPlayer) {
-            try { currentPlayer.pause(); } catch (_) { }
-            try { currentPlayer.destroy(); } catch (_) { }
-        }
-
-        // Clear the custom controls container before creating new player
-        const customControlsContainer = document.querySelector('.custom-plyr-controls');
-        if (customControlsContainer) {
-            customControlsContainer.innerHTML = '';
-        }
-
-        currentPlayer = new Plyr(video, {
-            controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-            autoplay: true,
-            muted: true,
-            tooltips: { controls: true, seek: true },
-            settings: [] // Remove settings menu
-        });
-
-        // Move controls to custom container after player is ready
-        currentPlayer.on('ready', (event) => {
-            const instance = event.detail.plyr;
-            const controls = instance.elements.controls;
-
-            // Only move controls if they exist and haven't been moved yet
-            if (controls && controls.parentElement !== customControlsContainer) {
-                customControlsContainer.appendChild(controls);
-            }
-
-            // Ensure video is muted and try to autoplay (Safari compatibility)
-            const videoElement = instance.media;
-            if (videoElement) {
-                videoElement.muted = true;
-                // Try to play after a short delay to ensure everything is ready
-                setTimeout(() => {
-                    const playPromise = videoElement.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(error => {
-                            console.log('Autoplay prevented:', error);
-                            // Show a play button or indicator that user needs to interact
-                        });
-                    }
-                }, 100);
-            }
-        });
-    }
 }
 
 // Handle project not found
@@ -216,15 +207,10 @@ export async function init(_rootEl, { search } = {}) {
     // Initialize with first video
     currentVideoIndex = 0;
     updateProjectDetail(currentProject, currentVideoIndex);
+    tryAutoplay();
 
-    // Initialize video player
-    initializeVideoPlayer();
-
-    // Trigger entrance animations after content is fully loaded
-    // Use requestAnimationFrame to ensure DOM is ready
     requestAnimationFrame(() => {
         setTimeout(() => {
-            console.log('About to call buildProjectDetailIntroTimeline');
             buildProjectDetailIntroTimeline();
         }, 100);
     });
@@ -232,14 +218,12 @@ export async function init(_rootEl, { search } = {}) {
     // Add user interaction listener for Safari autoplay
     let hasUserInteracted = false;
     const handleUserInteraction = () => {
-        if (!hasUserInteracted && currentPlayer) {
+        if (!hasUserInteracted) {
             hasUserInteracted = true;
-            const videoElement = currentPlayer.media;
-            if (videoElement && videoElement.paused) {
-                videoElement.muted = true;
-                videoElement.play().catch(error => {
-                    console.log('Play failed after user interaction:', error);
-                });
+            const videoEl = document.getElementById('projectVideo');
+            if (videoEl && videoEl.paused) {
+                videoEl.muted = true;
+                videoEl.play().catch(() => {});
             }
         }
     };
@@ -274,7 +258,6 @@ export async function destroy() {
     // Reset module state
     currentProject = null;
     currentVideoIndex = 0;
-    currentPlayer = null;
 }
 
 // Export function to prepare transition to home page
